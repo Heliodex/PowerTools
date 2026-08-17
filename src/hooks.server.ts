@@ -81,7 +81,7 @@ export async function handle(e): Promise<Response> {
 	return await finish(e)
 }
 
-export async function handleError({ error }) {
+export async function handleError({ error }): Promise<void> {
 	if (typeof error !== "object" || error == null) {
 		// Simple error logging (not a stack trace)
 		console.error(error)
