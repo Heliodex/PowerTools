@@ -1,7 +1,8 @@
 import { redirect } from "@sveltejs/kit"
 import { dev } from "$app/environment"
 import { db, Record, type RecordId } from "$lib/server/db"
-import deleteSessionsQuery from "$lib/server/deleteSessions.surql?raw"
+import deleteExpiredSessionsQuery from "$lib/server/deleteExpiredSessions.surql?raw"
+import deleteSessionQuery from "$lib/server/deleteSession.surql?raw"
 import deleteUserSessionsQuery from "$lib/server/deleteUserSessions.surql?raw"
 import getSessionAndUserQuery from "$lib/server/getSessionAndUser.surql?raw"
 import setSessionQuery from "$lib/server/setSession.surql?raw"
@@ -27,13 +28,13 @@ export async function validateSessionToken(
 }
 
 export async function invalidateSession(sessionId: string): Promise<void> {
-	await db.query(deleteSessionsQuery, {
+	await db.query(deleteExpiredSessionsQuery + deleteSessionQuery, {
 		sess: Record("session", sessionId),
 	})
 }
 
 export async function invalidateAllSessions(user: string): Promise<void> {
-	await db.query(deleteUserSessionsQuery, {
+	await db.query(deleteExpiredSessionsQuery + deleteUserSessionsQuery, {
 		user: Record("user", user),
 	})
 }

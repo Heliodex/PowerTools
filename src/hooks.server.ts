@@ -82,14 +82,11 @@ export async function handle(e) {
 }
 
 export async function handleError({ error }) {
-	if (typeof error === "object" && error != null) {
-		const status = (error as { status?: number }).status
-		if (status) {
-			console.error(status, red(error.toString()))
-			return
-		}
+	if (typeof error !== "object" || error == null) {
+		// Simple error logging (not a stack trace)
+		console.error(error)
 	}
 
-	// Simple error logging (not a stack trace)
-	console.error(error)
+	const status = (error as { status?: number }).status
+	if (status) console.error(status, red(error.toString()))
 }
