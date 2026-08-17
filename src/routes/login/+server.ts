@@ -1,6 +1,6 @@
 import type { RequestEvent } from "@sveltejs/kit"
 import { redirect } from "@sveltejs/kit"
-import { dev } from "$app/environment"
+import { dev } from "$app/env"
 import { getHackClubAuthUrl } from "$lib/server/auth"
 
 export async function GET({ cookies }: RequestEvent) {

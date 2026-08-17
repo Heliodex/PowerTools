@@ -1,10 +1,10 @@
 import { redirect } from "@sveltejs/kit"
-import { dev } from "$app/environment"
+import { dev } from "$app/env"
 import {
 	HACKCLUB_CLIENT_ID,
 	HACKCLUB_CLIENT_SECRET,
 	HACKCLUB_REDIRECT_URI,
-} from "$env/static/private"
+} from "$app/env/private"
 import { db, Record, type RecordId } from "$lib/server/db"
 import deleteExpiredSessionsQuery from "$lib/server/deleteExpiredSessions.surql?raw"
 import deleteSessionQuery from "$lib/server/deleteSession.surql?raw"

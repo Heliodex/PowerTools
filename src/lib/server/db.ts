@@ -5,7 +5,8 @@ import {
 	RecordId as SurrealRecordId,
 	Table,
 } from "surrealdb"
-import { building } from "$app/environment"
+
+import { building } from "$app/env"
 import initQuery from "$lib/server/init.surql?raw"
 import startSurreal from "$lib/server/process/surreal"
 
@@ -28,6 +29,7 @@ export const db = new Surreal({
 
 // Retry queries
 const ogq = db.query.bind(db)
+
 const retriable = "This transaction can be retried"
 
 // oof
@@ -36,7 +38,8 @@ db.query = async <R extends unknown[] = unknown[]>(
 	query: BoundQuery<any> | string,
 	bindings?: Record<string, unknown>
 ): Query<R, false> => {
-	if (query instanceof BoundQuery) throw new Error("bound queries unsupported") // bruh
+	if (query instanceof BoundQuery)
+		throw new Error("bound queries unsupported") // bruh
 
 	try {
 		return await ogq(query, bindings)
@@ -45,6 +48,7 @@ db.query = async <R extends unknown[] = unknown[]>(
 		if (!e.message.endsWith(retriable)) throw e
 		console.log("Retrying query:", e.message)
 	}
+
 	return await db.query(query, bindings)
 }
 
@@ -65,15 +69,20 @@ async function reconnect() {
 					password: "root",
 				},
 			})
+
 			console.log("reloaded", (await version()).version)
+
 			break
 		} catch (err) {
 			const e = err as Error
+
 			console.error("Failed to connect to database:", e.message)
+
 			if (attempt === 4)
 				console.log(
 					`Multiple connection attempts failed. Make sure the database is running, either locally or in a container, and is accessible at ${url}.`
 				)
+
 			console.log("Retrying connection in 1 second...")
 			await new Promise(resolve => setTimeout(resolve, 1000))
 		}
