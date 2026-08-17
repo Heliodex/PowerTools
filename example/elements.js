@@ -65,6 +65,9 @@ export class TagElement extends Element {
 	 * @returns {this}
 	 */
 	children(...nodes) {
+		if (this.childElements.length > 0)
+			throw new Error("children have already been added")
+
 		for (const [i, node] of nodes.entries())
 			if (!(node instanceof Element))
 				throw new Error(`nodes[${i}] must be an instance of Element`)
