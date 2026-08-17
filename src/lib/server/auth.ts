@@ -45,6 +45,7 @@ export const cookieOptions = Object.freeze({
 	maxAge: 30 * 24 * 60 * 60, // 30 days
 	path: "/",
 })
+export const cookieHCA = "hca"
 
 /**
  * Authorises a user and returns their session and user data, or redirects them to the login page.
