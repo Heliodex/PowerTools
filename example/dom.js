@@ -1,21 +1,6 @@
 // Import some classes from the elements module
 import { renderElement, TagElement, TextNode } from "./elements"
 
-const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-/**
- * Generates a random string ID of length 9
- * @returns {string}
- */
-function randomStringID() {
-	const result = []
-
-	for (let i = 0; i < 9; i++)
-		result.push(chars[Math.floor(Math.random() * chars.length)])
-
-	return result.join("")
-}
-
 /**
  * Represents a HTML document, with a head and body section
  * @param {TagElement[]} head

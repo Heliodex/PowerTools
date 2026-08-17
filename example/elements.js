@@ -1,13 +1,7 @@
-/**
- * Represents a HTML element in the Document Object Model (DOM)
- */
+// Represents a HTML element in the Document Object Model (DOM)
 export class Element {}
 
-/**
- * Transforms a virtual element to a DOM node
- * @param {Element} element
- * @returns {Node}
- */
+// Transforms a virtual element to a DOM node
 export function renderElement(element) {
 	if (element instanceof TextNode) return element.render()
 	if (element instanceof TagElement) return element.render()
@@ -15,13 +9,7 @@ export function renderElement(element) {
 	throw new Error("unknown element type")
 }
 
-/**
- * Represents a HTML DOM element with a name, attributes, events, and children
- * @param {string} name The element's tag name, such as "div", "a", "p", etc
- * @param {{[_: string]: any}} attrs An object of element attributes, like { "class": "btn" } or { "href": "https://hackclub.com" }
- * @param {{[_: string]: () => void}} events
- * @param {Element[]} children
- */
+// Represents a HTML DOM element with a name, attributes, events, and children
 export class TagElement extends Element {
 	/** @type {{[_: string]: any}} */
 	attrs = {}
@@ -30,7 +18,7 @@ export class TagElement extends Element {
 	events = {}
 
 	/** @type {Element[]} */
-	children = []
+	childElements = []
 
 	/**
 	 * Creates a new TagElement instance
@@ -52,7 +40,7 @@ export class TagElement extends Element {
 	 * @param {any} value
 	 * @returns {this}
 	 */
-	addAttribute(name, value) {
+	attribute(name, value) {
 		if (typeof name !== "string") throw new Error("name must be a string")
 		if (typeof value !== "string") throw new Error("value must be a string")
 
@@ -66,7 +54,7 @@ export class TagElement extends Element {
 	 * @param {() => void} handler
 	 * @returns {this}
 	 */
-	addEvent(event, handler) {
+	onEvent(event, handler) {
 		this.events[event] = handler
 		return this
 	}
@@ -76,12 +64,12 @@ export class TagElement extends Element {
 	 * @param {...Element} nodes
 	 * @returns {this}
 	 */
-	addChildren(...nodes) {
+	children(...nodes) {
 		for (const [i, node] of nodes.entries())
 			if (!(node instanceof Element))
 				throw new Error(`nodes[${i}] must be an instance of Element`)
 
-		this.children = nodes
+		this.childElements = nodes
 		return this
 	}
 
@@ -98,17 +86,14 @@ export class TagElement extends Element {
 		for (const [event, handler] of Object.entries(this.events))
 			node.addEventListener(event, handler)
 
-		for (const child of this.children)
+		for (const child of this.childElements)
 			node.appendChild(renderElement(child))
 
 		return node
 	}
 }
 
-/**
- * Represents a text node in the DOM
- * @param {string} text
- */
+// Represents a text node in the DOM
 export class TextNode extends Element {
 	/**
 	 * Creates a new TextNode instance
