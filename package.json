@@ -33,7 +33,6 @@
 		"vite": "^8.2.1"
 	},
 	"imports": {
-		"#lib": "./src/lib/index.js",
 		"#lib/*": "./src/lib/*"
 	}
 }
