@@ -1,5 +1,35 @@
+let started = false
+
+// SurrealDB writes its PID into ./data/surreal/LOCK while it holds the database lock. Since the `started` flag resets whenever SvelteKit reloads this module, verify the lock is actually owned by a live process before spawning a second instance.
+async function isLockHeldByLivingProcess(): Promise<boolean> {
+	try {
+		const pid = Number.parseInt(
+			(await Bun.file("data/surreal/LOCK").text()).trim(),
+			10
+		)
+		if (!Number.isFinite(pid)) return false
+
+		try {
+			process.kill(pid, 0)
+			return true
+		} catch (err) {
+			// EPERM: the process exists but belongs to another user
+			return (err as NodeJS.ErrnoException).code === "EPERM"
+		}
+	} catch {
+		// No lock file — this is the first start
+		return false
+	}
+}
+
 export default async () => {
+	if (started) return
+	if (await isLockHeldByLivingProcess()) {
+		console.log("SurrealDB is already running — skipping start.")
+		return
+	}
 	console.log("Starting SurrealDB...")
+	started = true
 
 	try {
 		const proc = Bun.spawn(
