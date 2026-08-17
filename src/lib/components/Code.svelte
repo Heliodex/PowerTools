@@ -12,7 +12,7 @@
 </script>
 
 <div class="pt-2 pb-4">
-	<div class="w-160 px-4 py-2 flex-col border rounded-xl">
+	<div class="w-full px-4 py-2 flex-col border rounded-xl">
 	<h3 class="pb-1"><u>{filename}</u></h3>
 
 	<div>
@@ -33,7 +33,7 @@
 
 <style>
 	code {
-		height: 1.4rem;
+		min-height: 1.5rem;
 		display: block;
 	}
 </style>

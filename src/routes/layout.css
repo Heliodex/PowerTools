@@ -7,3 +7,7 @@ a {
 .btn {
 	@apply cursor-pointer transition-colors;
 }
+
+h1 {
+	@apply text-3xl font-bold pb-4;
+}
