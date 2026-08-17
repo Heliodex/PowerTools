@@ -86,11 +86,12 @@ export async function handle(e): Promise<Response> {
 	return await finish(e)
 }
 
-export async function handleError({ error }): Promise<void> {
-	if (typeof error !== "object" || error == null)
+export async function handleError({ error: e }): Promise<void> {
+	if (typeof e !== "object" || e == null)
 		// Simple error logging (not a stack trace)
-		console.error(error)
+		console.error(e)
 
-	const status = (error as { status?: number }).status
-	if (status) console.error(status, red(error.toString()))
+	const status = (e as { status?: number }).status
+	if (status) console.error(status, red(e.toString()))
+	console.error(e)
 }
