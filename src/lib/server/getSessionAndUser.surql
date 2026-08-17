@@ -1,7 +1,7 @@
 LET $s = SELECT id, expires FROM ONLY $sess;
 LET $u = (SELECT
     id,
-	name
+	email
 FROM $sess<-hasSession<-user)[0];
 
 IF $s {

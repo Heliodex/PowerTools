@@ -157,8 +157,6 @@ export async function fetchHackClubUserInfo(
 export async function findOrCreateUser(
 	userInfo: HackClubUserInfo
 ): Promise<RecordId<"user">> {
-	console.log(userInfo)
-
 	const [, userId] = await db.query<RecordId<"user">[]>(
 		findOrCreateUserQuery,
 		{
@@ -166,8 +164,6 @@ export async function findOrCreateUser(
 			email: userInfo.identity.primary_email,
 		}
 	)
-
-	console.log("DONE", userId)
 
 	return userId
 }

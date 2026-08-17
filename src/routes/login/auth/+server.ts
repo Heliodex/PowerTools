@@ -1,5 +1,5 @@
 import type { RequestEvent } from "@sveltejs/kit"
-import { redirect } from "@sveltejs/kit"
+import { error, redirect } from "@sveltejs/kit"
 import {
 	cookieName,
 	cookieOptions,
@@ -16,34 +16,23 @@ export async function GET(event: RequestEvent) {
 	const storedState = cookies.get("hca_state")
 
 	// Verify state to prevent CSRF
-	if (!code || !state || state !== storedState) {
-		console.error("Invalid OAuth state or missing code")
-		redirect(302, "/login?error=invalid_state")
-	}
+	if (!code || !state || state !== storedState)
+		error(400, "Invalid OAuth state or missing code")
 
 	// Delete the state cookie
 	cookies.delete("hca_state", { path: "/" })
 
 	try {
-		// Exchange code for access token
 		const tokenResponse = await exchangeCodeForToken(code)
-
-		// Fetch user info from Hack Club
 		const userInfo = await fetchHackClubUserInfo(tokenResponse.access_token)
-
-		// Find or create user in database
 		const userId = await findOrCreateUser(userInfo)
-
-		// Create session
 		const session = await createSession(userId)
 
-		// Set session cookie
 		cookies.set(cookieName, session, cookieOptions)
-
-		// Redirect to home page (or wherever you want after login)
-		redirect(302, "/")
-	} catch (error) {
-		console.error("OAuth callback error:", error)
-		redirect(302, "/login?error=callback_failed")
+	} catch (e) {
+		console.error("OAuth callback error:", e)
+		error(500, "OAuth callback failed")
 	}
+
+	redirect(302, "/")
 }

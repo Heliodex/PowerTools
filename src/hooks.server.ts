@@ -37,7 +37,7 @@ const time = () => gray(new Date().toLocaleString())
 
 const userLog = (user: User | null) =>
 	user
-		? blue(user.name) + " ".repeat(21 - user.name.length)
+		? blue(user.email) + " ".repeat(21 - user.email.length)
 		: yellow("Logged-out user      ")
 
 async function finish({ event, resolve }: Parameters<Handle>[0]) {
@@ -45,6 +45,7 @@ async function finish({ event, resolve }: Parameters<Handle>[0]) {
 	const { user } = event.locals
 
 	// Fancy logging: time(?), user, method, and path
+	try {
 	const method = event.request.method as keyof typeof methodColours
 	console.log(
 		time(),
@@ -53,6 +54,9 @@ async function finish({ event, resolve }: Parameters<Handle>[0]) {
 		" ".repeat(7 - method.length),
 		pathnameColour(decodeURI(pathname) + search)
 	)
+	} catch (e) {
+		console.error("Could not log request:", e)
+	}
 
 	return await resolve(event)
 }
@@ -82,10 +86,9 @@ export async function handle(e): Promise<Response> {
 }
 
 export async function handleError({ error }): Promise<void> {
-	if (typeof error !== "object" || error == null) {
+	if (typeof error !== "object" || error == null)
 		// Simple error logging (not a stack trace)
 		console.error(error)
-	}
 
 	const status = (error as { status?: number }).status
 	if (status) console.error(status, red(error.toString()))

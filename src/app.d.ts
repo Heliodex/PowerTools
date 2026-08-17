@@ -7,7 +7,7 @@ import type { RecordId } from "$lib/server/db"
 declare global {
 	declare type User = {
 		id: RecordId<"user">
-		name: string
+		email: string
 	}
 
 	namespace App {

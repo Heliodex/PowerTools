@@ -1,4 +1,4 @@
-LET $u = SELECT VALUE record::id(id) FROM user WHERE email = $email;
+LET $u = SELECT VALUE id FROM user WHERE email = $email;
 
 IF $u {
 	$u;
