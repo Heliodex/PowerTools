@@ -9,15 +9,15 @@ import {
 	findOrCreateUser,
 } from "$lib/server/auth"
 
-export async function GET(event: RequestEvent) {
-	const { cookies, url } = event
-	const code = url.searchParams.get("code")
-	const state = url.searchParams.get("state")
-	const storedState = cookies.get("hca_state")
-
+export async function GET({ cookies, url }: RequestEvent) {
 	// Verify state to prevent CSRF
-	if (!code || !state || state !== storedState)
-		error(400, "Invalid OAuth state or missing code")
+	const code = url.searchParams.get("code")
+	if (!code) error(400, "Missing code")
+	const state = url.searchParams.get("state")
+	if (!state) error(400, "Missing state")
+	const storedState = cookies.get("hca_state")
+	if (!storedState) error(400, "Missing cookie")
+	if (state !== storedState) error(400, "Invalid state")
 
 	// Delete the state cookie
 	cookies.delete("hca_state", { path: "/" })
