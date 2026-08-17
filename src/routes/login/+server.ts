@@ -1,13 +1,21 @@
+import type { RequestEvent } from "@sveltejs/kit"
 import { redirect } from "@sveltejs/kit"
-import { cookieHCA } from "$lib/server/auth"
+import { dev } from "$app/environment"
+import { getHackClubAuthUrl } from "$lib/server/auth"
 
-export async function GET({ cookies }) {
-	cookies.set(cookieHCA, state, {
+export async function GET(event: RequestEvent) {
+	// Generate a random state for CSRF protection
+	const state = crypto.randomUUID()
+
+	// Store state in a cookie for verification in the callback
+	event.cookies.set("hca_state", state, {
 		path: "/",
 		httpOnly: true,
-		maxAge: 60 * 10,
+		maxAge: 60 * 10, // 10 minutes
 		sameSite: "lax",
+		secure: !dev,
 	})
 
-	redirect(302, url)
+	const authUrl = getHackClubAuthUrl(state)
+	redirect(302, authUrl)
 }
