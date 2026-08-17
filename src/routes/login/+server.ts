@@ -17,5 +17,5 @@ export async function GET({ cookies }: RequestEvent) {
 	})
 
 	const authUrl = getHackClubAuthUrl(state)
-	redirect(302, authUrl)
+	redirect(302, authUrl, { external: true })
 }
