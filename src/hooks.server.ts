@@ -1,7 +1,7 @@
 // "'Hooks' are app-wide functions you declare that SvelteKit will call in response to specific events, giving you fine-grained control over the framework's behaviour."
 // See https://kit.svelte.dev/docs/hooks/ for more info.
 
-import type { Handle } from "@sveltejs/kit/hooks"
+import type { Handle, HandleServerError } from "@sveltejs/kit/hooks"
 import pc from "picocolors"
 import {
 	cookieName,
@@ -40,7 +40,7 @@ const userLog = (user: User | null) =>
 		? blue(user.email) + " ".repeat(21 - user.email.length)
 		: yellow("Logged-out user      ")
 
-async function finish({ event, resolve }: Parameters<Handle>[0]) {
+const finish: Handle = async ({ event, resolve }) => {
 	const { pathname, search } = event.url
 	const { user } = event.locals
 
@@ -64,7 +64,7 @@ async function finish({ event, resolve }: Parameters<Handle>[0]) {
 
 // Ran every time a dynamic request is made.
 // Requests for prerendered pages do not trigger this hook.
-export async function handle(e): Promise<Response> {
+export const handle: Handle = async e => {
 	const { event } = e
 
 	const token = event.cookies.get(cookieName)
@@ -86,12 +86,12 @@ export async function handle(e): Promise<Response> {
 	return await finish(e)
 }
 
-export async function handleError({ error: e }): Promise<void> {
+export const handleError: HandleServerError = async ({ error: e }) => {
 	if (typeof e !== "object" || e == null)
 		// Simple error logging (not a stack trace)
 		console.error(e)
 
 	const status = (e as { status?: number }).status
-	if (status) console.error(status, red(e.toString()))
+	if (status) console.error(status, red(e?.toString()))
 	console.error(e)
 }
