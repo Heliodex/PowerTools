@@ -1,13 +1,29 @@
 // "'Hooks' are app-wide functions you declare that SvelteKit will call in response to specific events, giving you fine-grained control over the framework's behaviour."
 // See https://kit.svelte.dev/docs/hooks/ for more info.
 
-import type { Handle, HandleServerError } from "@sveltejs/kit/hooks"
+import type { Handle, HandleServerError, ServerInit } from "@sveltejs/kit/hooks"
 import pc from "picocolors"
 import {
 	cookieName,
 	cookieOptions,
 	validateSessionToken,
 } from "#lib/server/auth.js"
+import { reconnect } from "#lib/server/db.js"
+import startSurreal from "#lib/server/process/surreal.js"
+
+export const init: ServerInit = async () => {
+	try {
+		startSurreal()
+	} catch (e) {
+		console.log(e)
+		console.error(
+			"Failed to start SurrealDB. Make sure it is installed and accessible as `surreal`."
+		)
+		process.exit(1)
+	}
+
+	await reconnect()
+}
 
 const { magenta, red, yellow, green, blue, gray } = pc
 const methodColours = Object.freeze({

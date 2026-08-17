@@ -6,19 +6,7 @@ import {
 	Table,
 } from "surrealdb"
 import initQuery from "#lib/server/init.surql?raw"
-import startSurreal from "#lib/server/process/surreal.js"
 import { building } from "$app/env"
-
-if (!building)
-	try {
-		startSurreal()
-	} catch (e) {
-		console.log(e)
-		console.error(
-			"Failed to start SurrealDB. Make sure it is installed and accessible as `surreal`."
-		)
-		process.exit(1)
-	}
 
 export const db = new Surreal({
 	codecOptions: {
@@ -32,7 +20,7 @@ const ogq = db.query.bind(db)
 const retriable = "This transaction can be retried"
 
 // oof
-// also bad types but who cares
+// though better types now
 db.query = async <R extends unknown[] = unknown[]>(
 	query: BoundQuery<any> | string,
 	bindings?: Record<string, unknown>
@@ -55,7 +43,7 @@ export const version = db.version.bind(db)
 
 const url = new URL("ws://localhost:8001") // must be ws:// to prevent token expiration, http:// will expire after 1 hour by default
 
-async function reconnect() {
+export async function reconnect() {
 	for (let attempt = 0; ; attempt++)
 		try {
 			await db.close() // doesn't do anything if not connected
@@ -85,10 +73,7 @@ async function reconnect() {
 			console.log("Retrying connection in 1 second...")
 			await new Promise(resolve => setTimeout(resolve, 1000))
 		}
-}
 
-if (!building) {
-	await reconnect()
 	await db.query(initQuery)
 }
 
