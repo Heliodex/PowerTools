@@ -31,5 +31,9 @@
 		"svelte": "^5.56.9",
 		"tailwindcss": "^4.3.3",
 		"vite": "^8.2.1"
+	},
+	"imports": {
+		"#lib": "./src/lib/index.js",
+		"#lib/*": "./src/lib/*"
 	}
 }

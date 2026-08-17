@@ -1,7 +1,7 @@
 import type { RequestEvent } from "@sveltejs/kit"
 import { redirect } from "@sveltejs/kit"
+import { getHackClubAuthUrl } from "#lib/server/auth.js"
 import { dev } from "$app/env"
-import { getHackClubAuthUrl } from "$lib/server/auth"
 
 export async function GET({ cookies }: RequestEvent) {
 	// Generate a random state for CSRF protection

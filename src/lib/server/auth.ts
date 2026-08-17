@@ -1,17 +1,17 @@
 import { redirect } from "@sveltejs/kit"
+import { db, Record, type RecordId } from "#lib/server/db.js"
+import deleteExpiredSessionsQuery from "#lib/server/deleteExpiredSessions.surql?raw"
+import deleteSessionQuery from "#lib/server/deleteSession.surql?raw"
+import deleteUserSessionsQuery from "#lib/server/deleteUserSessions.surql?raw"
+import findOrCreateUserQuery from "#lib/server/findOrCreateUser.surql?raw"
+import getSessionAndUserQuery from "#lib/server/getSessionAndUser.surql?raw"
+import setSessionQuery from "#lib/server/setSession.surql?raw"
 import { dev } from "$app/env"
 import {
 	HACKCLUB_CLIENT_ID,
 	HACKCLUB_CLIENT_SECRET,
 	HACKCLUB_REDIRECT_URI,
 } from "$app/env/private"
-import { db, Record, type RecordId } from "$lib/server/db"
-import deleteExpiredSessionsQuery from "$lib/server/deleteExpiredSessions.surql?raw"
-import deleteSessionQuery from "$lib/server/deleteSession.surql?raw"
-import deleteUserSessionsQuery from "$lib/server/deleteUserSessions.surql?raw"
-import findOrCreateUserQuery from "$lib/server/findOrCreateUser.surql?raw"
-import getSessionAndUserQuery from "$lib/server/getSessionAndUser.surql?raw"
-import setSessionQuery from "$lib/server/setSession.surql?raw"
 
 export async function createSession(user: RecordId<"user">): Promise<string> {
 	const [, session] = await db.query<string[]>(setSessionQuery, { user })

@@ -2,7 +2,7 @@
 
 /// <reference types="@types/bun" />
 
-import type { RecordId } from "$lib/server/db"
+import type { RecordId } from "#lib/server/db.js"
 
 declare global {
 	declare type User = {

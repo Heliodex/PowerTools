@@ -7,7 +7,7 @@ import {
 	cookieName,
 	cookieOptions,
 	validateSessionToken,
-} from "$lib/server/auth"
+} from "#lib/server/auth.js"
 
 const { magenta, red, yellow, green, blue, gray } = pc
 const methodColours = Object.freeze({

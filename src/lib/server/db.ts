@@ -5,10 +5,9 @@ import {
 	RecordId as SurrealRecordId,
 	Table,
 } from "surrealdb"
-
+import initQuery from "#lib/server/init.surql?raw"
+import startSurreal from "#lib/server/process/surreal.js"
 import { building } from "$app/env"
-import initQuery from "$lib/server/init.surql?raw"
-import startSurreal from "$lib/server/process/surreal"
 
 if (!building)
 	try {

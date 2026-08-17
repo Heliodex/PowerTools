@@ -7,7 +7,7 @@ import {
 	exchangeCodeForToken,
 	fetchHackClubUserInfo,
 	findOrCreateUser,
-} from "$lib/server/auth"
+} from "#lib/server/auth.js"
 
 export async function GET({ cookies, url }: RequestEvent) {
 	// Verify state to prevent CSRF
