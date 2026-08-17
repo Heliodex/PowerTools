@@ -30,7 +30,6 @@ export class TagElement extends Element {
 
 		// Check types of arguments
 		if (typeof name !== "string") throw new Error("name must be a string")
-
 		this.name = name
 	}
 
@@ -105,9 +104,7 @@ export class TextNode extends Element {
 	constructor(text) {
 		super()
 
-		// Check types of arguments
 		if (typeof text !== "string") throw new Error("text must be a string")
-
 		this.text = text
 	}
 
