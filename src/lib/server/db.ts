@@ -1,4 +1,5 @@
 import {
+	BoundQuery,
 	type Query,
 	Surreal,
 	RecordId as SurrealRecordId,
@@ -31,10 +32,12 @@ const retriable = "This transaction can be retried"
 
 // oof
 // also bad types but who cares
-db.query = async <R extends unknown[]>(
-	query: string,
+db.query = async <R extends unknown[] = unknown[]>(
+	query: BoundQuery<any> | string,
 	bindings?: Record<string, unknown>
-): Query<R> => {
+): Query<R, false> => {
+	if (query instanceof BoundQuery) throw new Error("bound queries unsupported") // bruh
+
 	try {
 		return await ogq(query, bindings)
 	} catch (err) {

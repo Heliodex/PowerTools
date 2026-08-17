@@ -59,7 +59,7 @@ async function finish({ event, resolve }: Parameters<Handle>[0]) {
 
 // Ran every time a dynamic request is made.
 // Requests for prerendered pages do not trigger this hook.
-export async function handle(e) {
+export async function handle(e): Promise<Response> {
 	const { event } = e
 
 	const token = event.cookies.get(cookieName)
