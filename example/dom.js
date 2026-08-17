@@ -1,8 +1,6 @@
 // Import some classes from the elements module
 import { renderElement, TagElement } from "./elements"
 
-console.log("hello world")
-
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 /**
