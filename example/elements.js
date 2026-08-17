@@ -23,40 +23,27 @@ export function renderElement(element) {
  * @param {Element[]} children
  */
 export class TagElement extends Element {
+	/** @type {{[_: string]: any}} */
+	attrs = {}
+
+	/** @type {{[_: string]: () => void}} */
+	events = {}
+
+	/** @type {Element[]} */
+	children = []
+
 	/**
 	 * Creates a new TagElement instance
 	 * @param {string} name
-	 * @param {{[_: string]: any}} attrs
-	 * @param {{[_: string]: () => void}} events
-	 * @param {Element[]} children
 	 */
-	constructor(name, attrs, events, children) {
+	constructor(name) {
 		// Always call the parent constructor first
 		super()
 
 		// Check types of arguments
 		if (typeof name !== "string") throw new Error("name must be a string")
-		if (typeof attrs !== "object")
-			throw new Error("attrs must be an object")
-		if (typeof events !== "object")
-			throw new Error("events must be an object")
-		if (!Array.isArray(children))
-			throw new Error("children must be an array")
 
 		this.name = name
-		this.attrs = attrs
-		this.events = events
-		this.children = children
-	}
-
-	/**
-	 * Adds children to the tag element
-	 * @param {...Element} nodes
-	 * @returns {this}
-	 */
-	addChildren(...nodes) {
-		this.children = nodes
-		return this
 	}
 
 	/**
@@ -66,6 +53,9 @@ export class TagElement extends Element {
 	 * @returns {this}
 	 */
 	addAttribute(name, value) {
+		if (typeof name !== "string") throw new Error("name must be a string")
+		if (typeof value !== "string") throw new Error("value must be a string")
+
 		this.attrs[name] = value
 		return this
 	}
@@ -78,6 +68,20 @@ export class TagElement extends Element {
 	 */
 	addEvent(event, handler) {
 		this.events[event] = handler
+		return this
+	}
+
+	/**
+	 * Adds children to the tag element
+	 * @param {...Element} nodes
+	 * @returns {this}
+	 */
+	addChildren(...nodes) {
+		for (const [i, node] of nodes.entries())
+			if (!(node instanceof Element))
+				throw new Error(`nodes[${i}] must be an instance of Element`)
+
+		this.children = nodes
 		return this
 	}
 

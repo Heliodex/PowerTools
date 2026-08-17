@@ -1,5 +1,5 @@
 // Import some classes from the elements module
-import { renderElement, TagElement } from "./elements"
+import { renderElement, TagElement, TextNode } from "./elements"
 
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
@@ -21,7 +21,7 @@ function randomStringID() {
  * @param {TagElement[]} head
  * @param {TagElement[]} body
  */
-class Dom {
+export class Dom {
 	/**
 	 * Creates a new Dom instance
 	 * @param {TagElement[]} head
@@ -47,3 +47,17 @@ class Dom {
 		}
 	}
 }
+
+/**
+ * Creates a new TextNode instance
+ * @param {string} str
+ * @returns {TextNode}
+ */
+export const text = str => new TextNode(str)
+
+/**
+ * Creates a new TagElement instance
+ * @param {string} name
+ * @returns {TagElement}
+ */
+export const tag = name => new TagElement(name)
