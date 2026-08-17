@@ -1,7 +1,7 @@
 // "'Hooks' are app-wide functions you declare that SvelteKit will call in response to specific events, giving you fine-grained control over the framework's behaviour."
 // See https://kit.svelte.dev/docs/hooks/ for more info.
 
-import type { Handle } from "@sveltejs/kit"
+import type { Handle } from "@sveltejs/kit/hooks"
 import pc from "picocolors"
 import {
 	cookieName,
@@ -46,14 +46,15 @@ async function finish({ event, resolve }: Parameters<Handle>[0]) {
 
 	// Fancy logging: time(?), user, method, and path
 	try {
-	const method = event.request.method as keyof typeof methodColours
-	console.log(
-		time(),
-		userLog(user),
-		methodColours[method] || method,
-		" ".repeat(7 - method.length),
-		pathnameColour(decodeURI(pathname) + search)
-	)
+		const method = event.request.method as keyof typeof methodColours
+
+		console.log(
+			time(),
+			userLog(user),
+			methodColours[method] || method,
+			" ".repeat(7 - method.length),
+			pathnameColour(decodeURI(pathname) + search)
+		)
 	} catch (e) {
 		console.error("Could not log request:", e)
 	}
