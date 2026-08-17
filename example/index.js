@@ -1,7 +1,5 @@
-// Import some types from the elements module
-/**
- * @import { Element, TagElement, TextNode } from "./elements"
- */
+// Import some classes from the elements module
+import { renderElement, TagElement } from "./elements"
 
 console.log("hello world")
 
