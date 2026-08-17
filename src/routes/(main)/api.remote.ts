@@ -9,7 +9,7 @@ export const logout = form(async () => {
 	const { session } = await authorise(locals)
 
 	await invalidateSession(session)
-	cookies.delete(cookieName, { path: "/" })
+	cookies.delete(cookieName, {})
 
 	redirect(302, "/")
 })

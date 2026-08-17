@@ -9,7 +9,6 @@ export async function GET({ cookies }: RequestEvent) {
 
 	// Store state in a cookie for verification in the callback
 	cookies.set("hca_state", state, {
-		path: "/",
 		httpOnly: true,
 		maxAge: 60 * 10, // 10 minutes
 		sameSite: "lax",

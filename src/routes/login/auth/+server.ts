@@ -20,7 +20,7 @@ export async function GET({ cookies, url }: RequestEvent) {
 	if (state !== storedState) error(400, "Invalid state")
 
 	// Delete the state cookie
-	cookies.delete("hca_state", { path: "/" })
+	cookies.delete("hca_state", {})
 
 	try {
 		const tokenResponse = await exchangeCodeForToken(code)
