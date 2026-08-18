@@ -4,7 +4,8 @@ LET $project = CREATE ONLY project CONTENT {
 	codeUrl: $codeUrl,
 	projectType: $projectType,
 	ai: $ai,
-	reviewerNotes: $reviewerNotes
+	reviewerNotes: $reviewerNotes,
+	lapseTimelapses: $timelapseIds
 } RETURN VALUE id;
 
 $project;

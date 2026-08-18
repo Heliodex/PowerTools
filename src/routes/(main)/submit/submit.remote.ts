@@ -4,7 +4,8 @@ import { type } from "arktype"
 import sharp from "sharp"
 import { authorise } from "#lib/server/auth.js"
 import { db, type RecordId } from "#lib/server/db.js"
-import { form, getRequestEvent } from "$app/server"
+import { LAPSE_TIMELAPSE_SINCE } from "$app/env/private"
+import { form, query } from "$app/server"
 import createProjectQuery from "./createProject.surql?raw"
 
 const schema = type({
@@ -14,14 +15,31 @@ const schema = type({
 	"codeUrl?": "string",
 	"ai?": "boolean",
 	"reviewerNotes?": "string",
+	"timelapseIds?": "string[]",
 })
 
 export const newProjectForm = form(
 	schema,
-	async ({ image, name, description, codeUrl, ai, reviewerNotes }) => {
+	async ({
+		image,
+		name,
+		description,
+		codeUrl,
+		ai,
+		reviewerNotes,
+		timelapseIds,
+	}) => {
 		const { user } = await authorise()
 
-		console.log(image, name, description, codeUrl, ai, reviewerNotes)
+		console.log(
+			image,
+			name,
+			description,
+			codeUrl,
+			ai,
+			reviewerNotes,
+			timelapseIds
+		)
 
 		if (!fs.existsSync("./data/images"))
 			fs.mkdirSync("./data/images", { recursive: true })
@@ -35,6 +53,7 @@ export const newProjectForm = form(
 				codeUrl,
 				ai,
 				reviewerNotes,
+				timelapseIds,
 			}
 		)
 
@@ -52,3 +71,105 @@ export const newProjectForm = form(
 		redirect(303, "/home")
 	}
 )
+
+type LapseTimelapse = {
+	id: string
+	name: string
+	description: string
+	visibility: string
+	createdAt: number
+	duration: number
+	thumbnailUrl: string | null
+	playbackUrl: string | null
+}
+
+export type TimelapsesResult = {
+	linked: boolean
+	error: string | null
+	since: string
+	timelapses: LapseTimelapse[]
+}
+
+export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
+	const { user } = await authorise()
+
+	const since = LAPSE_TIMELAPSE_SINCE
+	const sinceMs = Date.parse(since)
+
+	const [result] = await db.query<{ id: string; accessToken: string }[][]>(
+		"SELECT VALUE { id: lapseData.id, accessToken: lapseData.accessToken } FROM $user",
+		{ user: user.id }
+	)
+	const lapse = result?.[0]
+	if (!lapse?.accessToken)
+		return { linked: false, error: null, since, timelapses: [] }
+
+	try {
+		const response = await fetch(
+			`https://api.lapse.hackclub.com/api/timelapse/findByUser?user=${encodeURIComponent(lapse.id)}`,
+			{ headers: { Authorization: `Bearer ${lapse.accessToken}` } }
+		)
+
+		if (!response.ok) {
+			if (response.status === 401)
+				return {
+					linked: true,
+					error: "Your Lapse session has expired. Please re-link your Lapse account.",
+					since,
+					timelapses: [],
+				}
+
+			return {
+				linked: true,
+				error: `Failed to fetch timelapses from Lapse (status ${response.status}).`,
+				since,
+				timelapses: [],
+			}
+		}
+
+		const body = await response.json()
+		if (!body?.ok || !body?.data?.timelapses)
+			return {
+				linked: true,
+				error: `Lapse API returned an error: ${JSON.stringify(body)}`,
+				since,
+				timelapses: [],
+			}
+
+		const timelapses = (body.data.timelapses as LapseTimelapse[])
+			.filter(t => t.createdAt >= sinceMs)
+			.sort((a, b) => b.createdAt - a.createdAt)
+			.map(
+				({
+					id,
+					name,
+					description,
+					visibility,
+					createdAt,
+					duration,
+					thumbnailUrl,
+					playbackUrl,
+				}) => ({
+					id,
+					name,
+					description,
+					visibility,
+					createdAt,
+					duration,
+					thumbnailUrl,
+					playbackUrl,
+				})
+			)
+
+		return { linked: true, error: null, since, timelapses }
+	} catch (e) {
+		console.error("Failed to fetch Lapse timelapses:", e)
+
+		return {
+			linked: true,
+			error: "Failed to fetch timelapses from Lapse. Please try again.",
+			since,
+			timelapses: [],
+		}
+	}
+})

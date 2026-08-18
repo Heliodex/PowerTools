@@ -20,6 +20,7 @@ DEFINE TABLE OVERWRITE project SCHEMAFULL TYPE NORMAL;
 	DEFINE FIELD OVERWRITE codeUrl ON project TYPE option<string>;
 	DEFINE FIELD OVERWRITE ai ON project TYPE bool;
 	DEFINE FIELD OVERWRITE reviewerNotes ON project TYPE option<string>;
+	DEFINE FIELD OVERWRITE lapseTimelapses ON project TYPE option<array<string>>;
 
 DEFINE TABLE OVERWRITE session SCHEMAFULL TYPE NORMAL;
 	DEFINE FIELD OVERWRITE id ON session TYPE string;
