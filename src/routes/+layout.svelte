@@ -1,7 +1,7 @@
 <script lang="ts">
 	import "./layout.css"
 	import favicon from "#lib/assets/favicon.svg"
-	import { getLoggedIn } from "./data.remote"
+	import { getLoggedIn, login } from "./data.remote"
 
 	let { children } = $props()
 
@@ -20,12 +20,13 @@
 			{:else}
 				<li><a class="btn" href="/">Landing</a></li>
 			{/if}
-			<li><a class="btn" href="/guide">Guide</a></li>
+				<li><a class="btn" href="/guide">Guide</a></li>
 			{#if user}
 				<li><a class="btn" href="/submit">Submit</a></li>
 			{:else}
 				<li>
-					<form action="/login" method="post">
+					<form {...login} class="-mt-1.5">
+						<!-- why wrong paddingg ggggg -->
 						<button class="btn" type="submit">Login</button>
 					</form>
 				</li>
