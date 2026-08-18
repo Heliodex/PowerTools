@@ -291,15 +291,19 @@ export async function linkLapseAccount(
 	userInfo: LapseUserInfo,
 	tokenResponse: LapseTokenResponse
 ): Promise<void> {
+	const lapseData = {
+		id: userInfo.id,
+		handle: userInfo.handle,
+		displayName: userInfo.displayName,
+		profilePictureUrl: userInfo.profilePictureUrl,
+		accessToken: tokenResponse.access_token,
+		refreshToken: tokenResponse.refresh_token,
+	}
+
+	console.log("linking lapse account", lapseData)
+
 	await db.query(linkLapseAccountQuery, {
 		userId: user,
-		lapseData: {
-			id: userInfo.id,
-			handle: userInfo.handle,
-			displayName: userInfo.displayName,
-			profilePictureUrl: userInfo.profilePictureUrl,
-			accessToken: tokenResponse.access_token,
-			refreshToken: tokenResponse.refresh_token,
-		},
+		lapseData,
 	})
 }
