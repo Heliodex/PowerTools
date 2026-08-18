@@ -55,7 +55,13 @@ export default async () => {
 
 			surrealPath = "./surreal"
 			await Bun.write(surrealPath, await response.text())
-			await Bun.$`chmod +x ${surrealPath}`			
+			await Bun.$`chmod +x ${surrealPath}`
+
+			console.log("Installed SurrealDB successfully.")
+
+			// test startup by just running surreal
+			const res = await Bun.$`${surrealPath}`
+			console.log(res.stdout.toString())
 		}
 
 		const proc = Bun.spawn(
