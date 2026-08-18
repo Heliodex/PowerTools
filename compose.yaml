@@ -11,13 +11,11 @@ services:
         restart: always
         volumes:
             - ./data:data
-        # command:
-        #     - start
-        #     - -l=trace
-        #     - -u=root
-        #     - -p=root
-        #     - surrealkv://data
-        command: start -l=trace -u=root -p=root surrealkv://data
+        command:
+            - -l=trace
+            - -u=root
+            - -p=root
+            - surrealkv://data
 
     site:
         build: .
