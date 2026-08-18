@@ -62,7 +62,8 @@ export default async () => {
 			// test startup by just running surreal
 			const res = await Bun.$`${surrealPath}`
 			console.log(res.stdout.toString())
-		} catch {
+		} catch (e) {
+			console.error(e)
 			console.error("Failed to install SurrealDB.")
 			process.exit(1)
 		}
@@ -92,7 +93,8 @@ export default async () => {
 			console.log(logs.split("\n").slice(-10).join("\n"))
 			process.exit(1)
 		})
-	} catch {
+	} catch (e) {
+		console.error(e)
 		console.error(
 			"Failed to start SurrealDB. If the automatic install failed, check the logs above; otherwise make sure `surreal` is installed and on PATH."
 		)
