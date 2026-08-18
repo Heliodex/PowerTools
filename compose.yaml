@@ -30,3 +30,11 @@ services:
         restart: always
         depends_on:
             - database # will keep retrying until database is ready
+
+volumes:
+    data:
+        driver: local
+        driver_opts:
+            type: none
+            device: ./data
+            o: bind
