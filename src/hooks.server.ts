@@ -10,19 +10,17 @@ import {
 } from "#lib/server/auth.js"
 import { reconnect } from "#lib/server/db.js"
 import startSurreal from "#lib/server/process/surreal.js"
-import { dev } from "$app/env"
 
 export const init: ServerInit = async () => {
-	if (dev)
-		try {
-			startSurreal()
-		} catch (e) {
-			console.log(e)
-			console.error(
-				"Failed to start SurrealDB. Make sure it is installed and accessible as `surreal`."
-			)
-			process.exit(1)
-		}
+	try {
+		startSurreal()
+	} catch (e) {
+		console.log(e)
+		console.error(
+			"Failed to start SurrealDB. Make sure it is installed and accessible as `surreal`."
+		)
+		process.exit(1)
+	}
 
 	await reconnect()
 }
