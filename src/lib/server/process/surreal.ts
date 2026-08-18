@@ -56,7 +56,8 @@ export default async () => {
 				)
 
 			const compressedPath = "/tmp/surreal.tgz"
-			await Bun.write(compressedPath, await response.text())
+			// Write the raw archive bytes — decoding the body as text corrupts the gzip data
+			await Bun.write(compressedPath, response)
 			await Bun.$`tar -xzf ${compressedPath} -C /tmp`
 			surrealPath = "/tmp/surreal"
 			await Bun.$`chmod +x ${surrealPath}`
@@ -70,7 +71,9 @@ export default async () => {
 				stderr: "pipe",
 			})
 
-			if (proc.exitCode !== 2) throw new Error("SurrealDB check failed.")
+			// exitCode is only populated after the process exits — wait for it before checking
+			if ((await proc.exited) !== 2)
+				throw new Error("SurrealDB check failed.")
 		} catch (e) {
 			console.error(e)
 			console.error("Failed to install SurrealDB.")
