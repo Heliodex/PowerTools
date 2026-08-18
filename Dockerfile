@@ -3,19 +3,6 @@
 FROM oven/bun AS base
 WORKDIR /app
 
-# SurrealDB is spawned by the site itself (#lib/server/process/surreal.ts) rather than run as a separate container, so install the `surreal` binary (to /usr/local/bin, which is already on PATH)
-RUN curl -sSf https://install.surrealdb.com > install.sh
-RUN chmod +x install.sh
-RUN ./install.sh
-
-# make sure the `surreal` binary is on PATH
-# ENV PATH="~/.surrealdb:$PATH"
-ENV PATH="/root/.surrealdb:$PATH"
-RUN ls /root/.surrealdb
-
-# check that `surreal` is available
-RUN surreal --version
-
 # install dependencies into temp directory
 # this will cache them and speed up future builds
 FROM base AS install
