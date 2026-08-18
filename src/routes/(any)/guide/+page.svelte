@@ -2,11 +2,14 @@
 	import Code from "#components/Code.svelte"
 </script>
 
-<h1>
+<a href="/">Back to the homepage</a>
+
+<h1 class="pt-8">
 	Guide
 </h1>
 
 <p>
+	Let's build some power tools for JavaScript &ndash; in this guide, we'll implement a basic JavaScript framework allowing you to split your code up into components, easily hook into and add handlers for events, and paves the way for more advanced features.<br />
 	So let's assume you know how to build a website. You start with a basic HTML template like the one below:
 </p>
 
