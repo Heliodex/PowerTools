@@ -1,12 +1,49 @@
 <script lang="ts">
 	import "./layout.css"
 	import favicon from "#lib/assets/favicon.svg"
+	import { getLoggedIn } from "./data.remote"
 
 	let { children } = $props()
+
+	const user = $derived(await getLoggedIn())
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-{@render children()}
+<header class="px-4 max-w-280 mx-auto flex">
+	<nav>
+		<ul class="list-none p-0 m-0 flex gap-8 py-6">
+			{#if user}
+				<li><a class="btn" href="/home">Home</a></li>
+			{:else}
+				<li><a class="btn" href="/">Landing</a></li>
+			{/if}
+			<li><a class="btn" href="/guide">Guide</a></li>
+			{#if user}
+				<li><a class="btn" href="/submit">Submit</a></li>
+			{/if}
+		</ul>
+	</nav>
+</header>
+
+<main class="px-4 py-20 max-w-240 mx-auto flex-1">
+	{@render children()}
+</main>
+
+<footer class="bg-stone-950 px-8 py-4 text-center">
+	A programme by <a href="https://hackclub.enterprise.slack.com/team/U07JH9LU1NC" target="_blank" rel="noreferrer">@Heliodex</a>
+</footer>
+
+<style>
+	@import "tailwindcss";
+
+	li {
+		@apply inline-block;
+
+		a {
+			@apply text-black  bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-400;
+		}
+	}
+</style>
