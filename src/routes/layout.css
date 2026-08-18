@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+@font-face {
+	font-family: Lexend;
+	src: url(/Lexend.ttf) format("truetype");
+	font-display: swap;
+}
+
+* {
+	font-family: "Lexend", sans-serif;
+}
+
+body {
+	/* background: rgb(17, 19, 22); */
+	@apply bg-mist-900;
+	color: white;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	line-height: 1.5;
+}
+
 a {
 	@apply underline text-blue-500 hover:text-blue-600 active:text-blue-400 transition-colors;
 }

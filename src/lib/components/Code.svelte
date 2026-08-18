@@ -12,7 +12,7 @@
 </script>
 
 <div class="pt-2 pb-4">
-	<div class="w-full px-4 py-2 flex-col border rounded-xl">
+	<div class="w-full px-4 py-2 flex-col border border-neutral-400 rounded-xl">
 	<h3 class="pb-1"><u>{filename}</u></h3>
 
 	<div>
@@ -20,9 +20,9 @@
 			{let padding = `padding-left: ${indent + 0.5}rem`}
 
 			{#if line.startsWith("+")}
-				<code class="bg-blue-300" style={padding}>{line.substring(1)}</code>
+				<code class="bg-blue-900" style={padding}>{line.substring(1)}</code>
 			{:else if line.startsWith("-")}
-				<code class="bg-red-300" style={padding}>{line.substring(1)}</code>
+				<code class="bg-red-900" style={padding}>{line.substring(1)}</code>
 			{:else}
 				<code style={padding}>{line}</code>
 			{/if}
