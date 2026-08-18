@@ -6,9 +6,20 @@
 	font-display: swap;
 }
 
-* {
+@font-face {
+	font-family: "Azeret Mono";
+	src: url(/AzeretMono.ttf) format("truetype");
+	font-display: swap;
+}
+
+*:not(code) {
 	font-family: "Lexend", sans-serif;
 }
+
+code {
+	font-family: "Azeret Mono", monospace;
+}
+
 
 body {
 	/* background: rgb(17, 19, 22); */

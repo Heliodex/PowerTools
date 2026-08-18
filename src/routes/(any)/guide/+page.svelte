@@ -76,7 +76,7 @@ We're going to take a different route here by adding a script instead, which we'
 `} />
 
 <p class="pb-4">
-	We could build our entire page this way, though with repetitive and imperative <code>document.createElement</code> calls, as opposed to the more declarative approach of standard HTML markup. When I say "imperative" as opposed to "declarative" here, I'm referring to the fact that the JS code requires a lot of machinery relating to describing what you want the computer to <em>do</em>, as opposed to what you want to <em>see</em>.
+	We could build our entire page this way, though with repetitive and imperative <code>document.createElement</code> calls, as opposed to the more declarative approach of standard HTML markup. When I say "imperative" as opposed to "declarative" here, I'm referring to the fact that the JavaScript code requires a lot of machinery relating to describing what you want the computer to <em>do</em>, as opposed to what you want to <em>see</em>.
 </p>
 
 <p>
