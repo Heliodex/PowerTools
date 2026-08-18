@@ -19,8 +19,7 @@ const schema = type({
 export const newProjectForm = form(
 	schema,
 	async ({ image, name, description, codeUrl, ai, reviewerNotes }) => {
-		const { locals } = getRequestEvent()
-		const { user } = await authorise(locals)
+		const { user } = await authorise()
 
 		console.log(image, name, description, codeUrl, ai, reviewerNotes)
 

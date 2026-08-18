@@ -6,8 +6,8 @@ import { db } from "#lib/server/db.js"
 import { form, getRequestEvent, query } from "$app/server"
 
 export const logout = form(async () => {
-	const { cookies, locals } = getRequestEvent()
-	const { session } = await authorise(locals)
+	const { cookies } = getRequestEvent()
+	const { session } = await authorise()
 
 	await invalidateSession(session)
 	cookies.delete(cookieName, {})
@@ -28,8 +28,7 @@ type LapseProfile = {
 }
 
 export const getLapseData = query(async () => {
-	const { locals } = getRequestEvent()
-	const { user } = await authorise(locals)
+	const { user } = await authorise()
 
 	// Only public profile fields are returned to the client — never the access/refresh tokens
 	const [result] = await db.query<LapseProfile[][]>(

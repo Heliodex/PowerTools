@@ -62,13 +62,11 @@ export const cookieOptions = Object.freeze({
  * @example
  * const { session, user } = await authorise(locals)
  */
-export async function authorise({
-	session,
-	user,
-}: {
-	session: string | null
-	user: User | null
-}) {
+export async function authorise() {
+	const {
+		locals: { session, user },
+	} = getRequestEvent()
+
 	if (!session || !user)
 		// TODO: get session and user from getRequestEvent() locals
 		redirect(302, "/login")
