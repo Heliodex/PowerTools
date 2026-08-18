@@ -6,7 +6,9 @@
 
 <h1>You are logged in</h1>
 
-Wanna <a href="/submit">submit</a>?
+<p class="pb-8">
+	Wanna <a href="/submit">submit</a>?
+</p>
 
 {#if lapseData}
 	<h2 class="pt-4">Your Lapse account</h2>

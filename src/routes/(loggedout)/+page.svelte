@@ -19,8 +19,10 @@
 		<img src={powertools} alt="Power Tools logo" class="w-72" />
 	</div>
 
-
-	<h1 class="text-6xl!">Power Tools</h1>
+	<h1 class="text-6xl! pb-0!">Power Tools</h1>
+	<p class="text-center pb-8">
+		by <a href="https://hackclub.enterprise.slack.com/team/U07JH9LU1NC" target="_blank" rel="noreferrer">@Heliodex</a>
+	</p>
 	<p class="max-w-120">
 		Refurbish your frontend experience by building a mini JS framework or tool,	and win cloud credits to host it!
 	</p>
