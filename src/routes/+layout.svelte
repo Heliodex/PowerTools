@@ -23,6 +23,8 @@
 			<li><a class="btn" href="/guide">Guide</a></li>
 			{#if user}
 				<li><a class="btn" href="/submit">Submit</a></li>
+			{:else}
+				<li><a class="btn" href="/login">Login</a></li>
 			{/if}
 		</ul>
 	</nav>
@@ -33,7 +35,14 @@
 </main>
 
 <footer class="bg-stone-950 px-8 py-4 text-center">
-	A programme by <a href="https://hackclub.enterprise.slack.com/team/U07JH9LU1NC" target="_blank" rel="noreferrer">@Heliodex</a>
+	<p class="pb-4">
+		A programme by <a href="https://hackclub.enterprise.slack.com/team/U07JH9LU1NC" target="_blank" rel="noreferrer">@Heliodex</a> at <a href="https://hackclub.com/" target="_blank" rel="noreferrer">Hack Club</a>!
+	</p>
+
+	<p>
+		<a href="https://hackclub.com/privacy-and-terms" target="_blank" rel="noreferrer">Privacy & Terms</a> |
+		<a href="https://github.com/Heliodex/ysws2" target="_blank" rel="noreferrer">Source code</a>
+	</p>
 </footer>
 
 <style>
@@ -43,7 +52,7 @@
 		@apply inline-block;
 
 		a {
-			@apply text-black  bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-400;
+			@apply text-black  bg-[#f7df1e] hover:bg-yellow-600 active:bg-yellow-400;
 		}
 	}
 </style>

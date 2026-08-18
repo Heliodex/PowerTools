@@ -13,7 +13,7 @@
 
 <div class="pt-2 pb-6 bg-stone-900">
 	<div class="w-full px-4 py-2 flex-col border border-neutral-400 rounded-xl">
-	<h3 class="pb-1"><u>{filename}</u></h3>
+	<p class="pb-2 font-bold"><u>{filename}</u></p>
 
 	<div>
 		{#each lines as [indent, line]}

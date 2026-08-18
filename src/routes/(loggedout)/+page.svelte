@@ -1,3 +1,7 @@
+<script lang="ts">
+	import powertools from "./powertools.svg"
+</script>
+
 <a href="https://hackclub.com/">
 	<img
 		id="hc"
@@ -5,6 +9,8 @@
 		src="https://assets.hackclub.com/flag-orpheus-top.svg"
 		alt="Hack Club" />
 </a>
+
+<img src={powertools} alt="Power Tools logo" class="w-40" />
 
 
 <h1>Welcome to YSWS</h1>
