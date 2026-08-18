@@ -22,6 +22,14 @@ async function isLockHeldByLivingProcess(): Promise<boolean> {
 	}
 }
 
+function getDownloadPath(): string {
+	const version = "3.2.4"
+	const { arch, platform } = process
+	const filename = `surreal-v${version}.${platform}-${arch}.tgz`
+
+	return `https://github.com/surrealdb/surrealdb/releases/download/v${version}/${filename}`
+}
+
 export default async () => {
 	if (started) return
 	if (await isLockHeldByLivingProcess()) {
@@ -31,25 +39,28 @@ export default async () => {
 	console.log("Starting SurrealDB...")
 	started = true
 
+	let surrealPath = "surreal"
+
 	try {
 		if (!Bun.which("surreal")) {
 			console.log("SurrealDB is not installed. Installing...")
-			// Curl may not be available, so download the installer script with fetch before running it.
-			const response = await fetch("https://install.surrealdb.com")
+
+			const url = getDownloadPath()
+			console.log(`Downloading SurrealDB from ${url}`)
+			const response = await fetch(url)
 			if (!response.ok)
 				throw new Error(
-					`Failed to download installer: ${response.status} ${response.statusText}`
+					`Failed to download SurrealDB: ${response.status} ${response.statusText}`
 				)
 
-			const installerPath = "/tmp/surrealdb-install.sh"
-			await Bun.write(installerPath, await response.text())
-			// Bun.$ inherits stdout/stderr by default, so the installer's logs print to the terminal
-			await Bun.$`sh ${installerPath}`
+			surrealPath = "./surreal"
+			await Bun.write(surrealPath, await response.text())
+			await Bun.$`chmod +x ${surrealPath}`			
 		}
 
 		const proc = Bun.spawn(
 			[
-				"surreal",
+				surrealPath,
 				"start",
 				"-u=root",
 				"-p=root",
