@@ -20,6 +20,10 @@ services:
 
     site:
         build: .
+        environment:
+            # ws://database:8000 resolves within the Compose network to the
+            # database service, which listens on port 8000 (not the local-dev 8001)
+            SURREAL_URL: ws://database:8000
         ports:
             - 3000:3000
         restart: unless-stopped
