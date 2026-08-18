@@ -16,6 +16,7 @@ import {
 	LAPSE_CLIENT_SECRET,
 	LAPSE_REDIRECT_URI,
 } from "$app/env/private"
+import { getRequestEvent } from "$app/server"
 
 export async function createSession(user: RecordId<"user">): Promise<string> {
 	const [, session] = await db.query<string[]>(setSessionQuery, { user })
@@ -69,7 +70,7 @@ export async function authorise() {
 
 	if (!session || !user)
 		// TODO: get session and user from getRequestEvent() locals
-		redirect(302, "/login")
+		redirect(302, "/")
 
 	return { session, user }
 }

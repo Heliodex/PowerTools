@@ -1,25 +1,38 @@
 import type { RequestEvent } from "@sveltejs/kit"
-import { redirect } from "@sveltejs/kit"
-import { generatePkcePair, getLapseAuthUrl } from "#lib/server/auth.js"
-import { dev } from "$app/env"
+import { error, redirect } from "@sveltejs/kit"
+import {
+	authorise,
+	exchangeLapseCodeForToken,
+	fetchLapseUserInfo,
+	linkLapseAccount,
+} from "#lib/server/auth.js"
 
-export async function GET({ cookies }: RequestEvent) {
-	const state = crypto.randomUUID()
-	const { verifier, challenge } = await generatePkcePair()
+export async function GET({ cookies, url }: RequestEvent) {
+	const { user } = await authorise()
 
-	// Store the state and PKCE verifier in cookies for verification in the callback
-	cookies.set("lapse_state", state, {
-		httpOnly: true,
-		maxAge: 60 * 10, // 10 minutes
-		sameSite: "lax",
-		secure: !dev,
-	})
-	cookies.set("lapse_verifier", verifier, {
-		httpOnly: true,
-		maxAge: 60 * 10, // 10 minutes
-		sameSite: "lax",
-		secure: !dev,
-	})
+	// Verify state to prevent CSRF
+	const code = url.searchParams.get("code")
+	if (!code) error(400, "Missing code")
+	const state = url.searchParams.get("state")
+	if (!state) error(400, "Missing state")
+	const storedState = cookies.get("lapse_state")
+	if (!storedState) error(400, "Missing cookie")
+	if (state !== storedState) error(400, "Invalid state")
+	const verifier = cookies.get("lapse_verifier")
+	if (!verifier) error(400, "Missing verifier cookie")
 
-	redirect(302, getLapseAuthUrl(state, challenge), { external: true })
+	// Delete the state and verifier cookies
+	cookies.delete("lapse_state", {})
+	cookies.delete("lapse_verifier", {})
+
+	try {
+		const tokenResponse = await exchangeLapseCodeForToken(code, verifier)
+		const userInfo = await fetchLapseUserInfo(tokenResponse.access_token)
+		await linkLapseAccount(user.id, userInfo, tokenResponse)
+	} catch (e) {
+		console.error("Lapse OAuth callback error:", e)
+		error(500, "Lapse OAuth callback failed")
+	}
+
+	redirect(302, "/home")
 }

@@ -1,8 +1,15 @@
 // Contains various api methods that cannot be accessed in a page context, usually because they are requested from a component.
 
 import { redirect } from "@sveltejs/kit"
-import { authorise, cookieName, invalidateSession } from "#lib/server/auth.js"
+import {
+	authorise,
+	cookieName,
+	generatePkcePair,
+	getLapseAuthUrl,
+	invalidateSession,
+} from "#lib/server/auth.js"
 import { db } from "#lib/server/db.js"
+import { dev } from "$app/env"
 import { form, getRequestEvent, query } from "$app/server"
 
 export const logout = form(async () => {
@@ -18,6 +25,29 @@ export const logout = form(async () => {
 export const statusping = form(() => {
 	// does nothing
 	// hooks.server.ts will update the user's status when pinged
+})
+
+export const lapseLogin = form(async () => {
+	const { cookies } = getRequestEvent()
+
+	const state = crypto.randomUUID()
+	const { verifier, challenge } = await generatePkcePair()
+
+	// Store the state and PKCE verifier in cookies for verification in the callback
+	cookies.set("lapse_state", state, {
+		httpOnly: true,
+		maxAge: 60 * 10, // 10 minutes
+		sameSite: "lax",
+		secure: !dev,
+	})
+	cookies.set("lapse_verifier", verifier, {
+		httpOnly: true,
+		maxAge: 60 * 10, // 10 minutes
+		sameSite: "lax",
+		secure: !dev,
+	})
+
+	redirect(302, getLapseAuthUrl(state, challenge), { external: true })
 })
 
 type LapseProfile = {
