@@ -445,30 +445,31 @@ We're going to take a different route here by adding a script instead, which we'
 <Code filename="elements.js" code={`
 	export class TagElement extends Element {
 		// ...
-		attribute(name, value) {
-			if (typeof name !== "string") throw new Error("name must be a string")
-			if (typeof value !== "string") throw new Error("value must be a string")
 
-			this.attrs[name] = value
-			return this
-		}
-
-		onEvent(event, handler) {
-			this.events[event] = handler
-			return this
-		}
-
-		children(...nodes) {
-			if (this.childElements.length > 0)
-				throw new Error("children have already been added")
-
-			for (const [i, node] of nodes.entries())
-				if (!(node instanceof Element))
-					throw new Error(\`nodes[\${i}] must be an instance of Element\`)
-
-			this.childElements = nodes
-			return this
-		}
++		attribute(name, value) {
++			if (typeof name !== "string") throw new Error("name must be a string")
++			if (typeof value !== "string") throw new Error("value must be a string")
++
++			this.attrs[name] = value
++			return this
++		}
++
++		onEvent(event, handler) {
++			this.events[event] = handler
++			return this
++		}
++
++		children(...nodes) {
++			if (this.childElements.length > 0)
++				throw new Error("children have already been added")
++
++			for (const [i, node] of nodes.entries())
++				if (!(node instanceof Element))
++					throw new Error(\`nodes[\${i}] must be an instance of Element\`)
++
++			this.childElements = nodes
++			return this
++		}
 	}
 `} />
 
