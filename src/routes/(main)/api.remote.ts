@@ -26,7 +26,6 @@ export const lapseLogin = form(async () => {
 	const { cookies } = getRequestEvent()
 
 	const state = crypto.randomUUID()
-	const { verifier, challenge } = await generatePkcePair()
 
 	// Store the state and PKCE verifier in cookies for verification in the callback
 	cookies.set("lapse_state", state, {
@@ -35,6 +34,9 @@ export const lapseLogin = form(async () => {
 		sameSite: "lax",
 		secure: !dev,
 	})
+
+	const { verifier, challenge } = await generatePkcePair()
+
 	cookies.set("lapse_verifier", verifier, {
 		httpOnly: true,
 		maxAge: 60 * 10, // 10 minutes

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getLapseData, logout } from "../api.remote"
+	import { getLapseData, lapseLogin, logout } from "../api.remote"
 
 	const lapseData = $derived(await getLapseData())
 </script>
@@ -22,11 +22,12 @@
 	<p>Handle: {lapseData.handle}</p>
 	<p>Display name: {lapseData.displayName}</p>
 {:else}
-	<a
-		class="btn bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
-		href="/lapse">
-		Link Lapse account
-	</a>
+	<form {...lapseLogin} class="pt-4">
+		<button
+			class="btn bg-blue-500 hover:bg-blue-600 active:bg-blue-400">
+			Link Lapse account
+		</button>
+	</form>
 {/if}
 
 <form {...logout} class="pt-4">
