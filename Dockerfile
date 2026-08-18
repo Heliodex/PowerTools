@@ -21,5 +21,5 @@ COPY . .
 WORKDIR /app
 RUN bun run build
 
-# run the app
-ENTRYPOINT ["bun", "-b", "./build"]
+# run the app; point at the adapter-node entry file directly, since `bun -b ./build` is parsed differently across Bun versions (some resolve `./build` as a script name)
+ENTRYPOINT ["bun", "./build/index.js"]
