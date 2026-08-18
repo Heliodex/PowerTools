@@ -62,8 +62,13 @@ export default async () => {
 			console.log("Installed SurrealDB successfully.")
 
 			// test startup by just running surreal
-			const res = await Bun.$`${surrealPath}`
-			console.log(res.stdout.toString())
+			const proc = Bun.spawn([surrealPath], {
+				cwd: ".",
+				stdout: "pipe",
+				stderr: "pipe",
+			})
+
+			if (proc.exitCode !== 2) throw new Error("SurrealDB check failed.")
 		} catch (e) {
 			console.error(e)
 			console.error("Failed to install SurrealDB.")
