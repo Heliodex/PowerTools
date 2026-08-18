@@ -25,7 +25,9 @@ async function isLockHeldByLivingProcess(): Promise<boolean> {
 function getDownloadPath(): string {
 	const version = "3.2.4"
 	const { arch, platform } = process
-	const filename = `surreal-v${version}.${platform}-${arch}.tgz`
+
+	const realarch = arch === "x64" ? "amd64" : arch
+	const filename = `surreal-v${version}.${platform}-${realarch}.tgz`
 
 	return `https://github.com/surrealdb/surrealdb/releases/download/v${version}/${filename}`
 }
