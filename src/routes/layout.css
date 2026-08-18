@@ -32,7 +32,7 @@ body {
 }
 
 a {
-	@apply underline text-blue-500 hover:text-blue-600 active:text-blue-400 transition-colors;
+	@apply underline text-blue-300 hover:text-blue-400 active:text-blue-200 transition-colors;
 }
 
 .btn {
@@ -45,4 +45,59 @@ h1 {
 
 p {
 	@apply text-pretty;
+}
+
+form fieldset {
+	display: flex;
+	flex-direction: column;
+	@apply pb-6;
+
+	& label {
+		@apply pb-2;
+	}
+
+	/* apply to label next to required inputs */
+	&:has(input[required]) label::after,
+	&:has(select[required]) label::after,
+	&:has(textarea[required]) label::after {
+		content: "*";
+		@apply text-red-500;
+	}
+	&:not(:has(input[required])):not(:has(select[required])):not(
+			:has(textarea[required])
+		)
+		label::after {
+		content: " (optional)";
+		@apply text-sm text-neutral-400;
+	}
+}
+
+/* style file browse input "Browse..." section */
+
+input[type="file"]::file-selector-button {
+	@apply font-bold pr-4;
+}
+
+input[type="file"],
+select {
+	@apply w-100;
+}
+
+input,
+textarea,
+select {
+	@apply bg-stone-900 border border-neutral-500 rounded-lg px-4 py-2;
+}
+
+select,
+input[type="file"] {
+	cursor: pointer;
+}
+
+details:hover:not([open]) {
+	@apply bg-stone-900;
+}
+
+input[type="checkbox"] {
+	@apply w-4 h-4 cursor-pointer;
 }

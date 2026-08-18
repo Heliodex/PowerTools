@@ -27,6 +27,8 @@
 		"@sveltejs/kit": "next",
 		"@sveltejs/vite-plugin-svelte": "^7.3.0",
 		"@tailwindcss/vite": "^4.3.3",
+		"arktype": "^2.2.3",
+		"sharp": "^0.35.3",
 		"surrealdb": "^2.0.8",
 		"svelte": "^5.56.9",
 		"tailwindcss": "^4.3.3",
