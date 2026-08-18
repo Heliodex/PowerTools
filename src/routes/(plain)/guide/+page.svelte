@@ -3,7 +3,7 @@
 </script>
 
 <h1>
-	Part 1
+	Guide
 </h1>
 
 <p>
@@ -202,7 +202,7 @@ We're going to take a different route here by adding a script instead, which we'
 </p>
 
 <p>
-	Well, the counterText element is declared once upfront, and isn't updated when the counter value changes. There's ways to do this automatically, using a <em>reactive</em> system, which would make our code even more declarative. We won't do this in this part of the guide though, as it's a complex topic. For now, we'll just update the counterText element manually.
+	Well, the counterText element is declared once upfront, and isn't updated when the counter value changes. There's ways to do this automatically, using a <em>reactive</em> system, which would make our code even more declarative. We won't do this in this guide though, as it's a complex topic. For now, we'll just update the counterText element manually.
 </p>
 
 <Code filename="index.js" code={`
@@ -433,7 +433,119 @@ We're going to take a different route here by adding a script instead, which we'
 	export class VirtualDom {
 		// ...
 
-		export const text = str => new TextNode(str)
-		export const tag = name => new TagElement(name)
++		export const text = str => new TextNode(str)
++		export const tag = name => new TagElement(name)
 	}
+`} />
+
+<p>
+	Not super dynamic though. We'll go back to the <b>elements.js</b> file and add some helper functions to the <code>TagElement</code> class.
+</p>
+
+<Code filename="elements.js" code={`
+	export class TagElement extends Element {
+		// ...
+		attribute(name, value) {
+			if (typeof name !== "string") throw new Error("name must be a string")
+			if (typeof value !== "string") throw new Error("value must be a string")
+
+			this.attrs[name] = value
+			return this
+		}
+
+		onEvent(event, handler) {
+			this.events[event] = handler
+			return this
+		}
+
+		children(...nodes) {
+			if (this.childElements.length > 0)
+				throw new Error("children have already been added")
+
+			for (const [i, node] of nodes.entries())
+				if (!(node instanceof Element))
+					throw new Error(\`nodes[\${i}] must be an instance of Element\`)
+
+			this.childElements = nodes
+			return this
+		}
+	}
+`} />
+
+<p>
+	Check it out! Let's make a simple tree and render it now.
+</p>
+
+<Code filename="index.js" code={`
+	import { tag, text, VirtualDom } from "./dom.js"
+
+	const dom = new VirtualDom(
+		[tag("title").children(text("JS tools test"))],
+		[
+			tag("h1").children(text("JS tools test")),
+			tag("p")
+				.attribute("style", "color: blue")
+				.children(text("hello, world")),
+
+			tag("button")
+				.onEvent("click", () => {
+					console.log("sup")
+				})
+				.children(text("Click me")),
+
+			tag("div").children(
+				tag("h2").children(text("List of things I can do")),
+				tag("ul").children(
+					tag("li").children(text("write code")),
+					tag("li").children(text("trial & error")),
+					tag("li").children(text("reinvent the wheel")),
+					tag("li").children(text("procrastinate")),
+				)
+			),
+		]
+	)
+
+	dom.render()
+`} />
+
+<hr class="pb-4"/>
+
+<p>
+	This guide is simply an example of a simple frontend framework that could be built in an hour or 2. I suggest you try implementing a similar version or building something inspired by it. Alternatively, you could try expanding on this example and adding more features to it &ndash; see the challenge below!
+</p>
+
+<h1 class="pt-4">
+	Challenge
+</h1>
+
+<p>
+	Updating the DOM here from an event still requires updating the content of the element manually. How about trying to integrate a reactivity system into the above virtual DOM implementation? See if you can modify the <b>dom.js</b> and <b>element.js</b> files, and implement <b>value.js</b>, to allow the following code snippet, or something similar to it, to increment both counters automatically.<br />
+	For bonus credit, make sure that there are no more updates made than are absolutely necessary, that is, only 1 update for each VDOM element/computed value upon each root value change. Have fun!
+</p>
+
+<Code filename="index.js" code={`
+	import { tag, text, VirtualDom } from "./dom.js"
+	import { Computed, Value } from "./value.js"
+
+	const count = Value(0)
+	const doubled = Computed(use => use(count) * 2)
+
+	const counterText = Computed(use => text(\`count: \${use(count)}\`))
+	const doubledText = Computed(use => text(\`doubled: \${use(doubled)}\`))
+
+	const dom = new VirtualDom(
+		[tag("title").children(text("Reactivity!"))],
+		[
+			tag("p").children(counterText),
+			tag("p").children(doubledText),
+
+			tag("button")
+				.onEvent("click", () => {
+					count.set(count.get() + 1)
+				})
+				.children(text("Click me")),
+		]
+	)
+
+	dom.render()
 `} />

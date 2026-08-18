@@ -20,7 +20,7 @@ const dom = new VirtualDom(
 				tag("li").children(text("write code")),
 				tag("li").children(text("trial & error")),
 				tag("li").children(text("reinvent the wheel")),
-				tag("li").children(text("procrastinate"))
+				tag("li").children(text("procrastinate")),
 			)
 		),
 	]
