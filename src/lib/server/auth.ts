@@ -5,12 +5,16 @@ import deleteSessionQuery from "#lib/server/deleteSession.surql?raw"
 import deleteUserSessionsQuery from "#lib/server/deleteUserSessions.surql?raw"
 import findOrCreateUserQuery from "#lib/server/findOrCreateUser.surql?raw"
 import getSessionAndUserQuery from "#lib/server/getSessionAndUser.surql?raw"
+import linkLapseAccountQuery from "#lib/server/linkLapseAccount.surql?raw"
 import setSessionQuery from "#lib/server/setSession.surql?raw"
 import { dev } from "$app/env"
 import {
 	HACKCLUB_CLIENT_ID,
 	HACKCLUB_CLIENT_SECRET,
 	HACKCLUB_REDIRECT_URI,
+	LAPSE_CLIENT_ID,
+	LAPSE_CLIENT_SECRET,
+	LAPSE_REDIRECT_URI,
 } from "$app/env/private"
 
 export async function createSession(user: RecordId<"user">): Promise<string> {
@@ -165,4 +169,138 @@ export async function findOrCreateUser(
 	)
 
 	return userId
+}
+
+/**
+ * Generates a PKCE verifier and its S256 code challenge
+ */
+export async function generatePkcePair(): Promise<{
+	verifier: string
+	challenge: string
+}> {
+	const verifier = crypto.randomUUID() + crypto.randomUUID()
+	const digest = await crypto.subtle.digest(
+		"SHA-256",
+		new TextEncoder().encode(verifier)
+	)
+	const challenge = btoa(String.fromCharCode(...new Uint8Array(digest)))
+		.replace(/\+/g, "-")
+		.replace(/\//g, "_")
+		.replace(/=+$/, "")
+
+	return { verifier, challenge }
+}
+
+/**
+ * Generates the Lapse OAuth authorization URL
+ */
+export function getLapseAuthUrl(state: string, codeChallenge: string): string {
+	const params = new URLSearchParams({
+		client_id: LAPSE_CLIENT_ID,
+		redirect_uri: LAPSE_REDIRECT_URI,
+		response_type: "code",
+		scope: "user:read",
+		state,
+		code_challenge: codeChallenge,
+		code_challenge_method: "S256",
+	})
+	return `https://api.lapse.hackclub.com/api/auth/authorize?${params.toString()}`
+}
+
+type LapseTokenResponse = {
+	access_token: string
+	refresh_token: string
+	expires_in: number
+	token_type: string
+	scope: string
+}
+
+/**
+ * Exchanges an authorization code for a Lapse access token
+ */
+export async function exchangeLapseCodeForToken(
+	code: string,
+	codeVerifier: string
+): Promise<LapseTokenResponse> {
+	const response = await fetch(
+		"https://api.lapse.hackclub.com/api/auth/token",
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				Accept: "application/json",
+			},
+			body: new URLSearchParams({
+				grant_type: "authorization_code",
+				code,
+				redirect_uri: LAPSE_REDIRECT_URI,
+				client_id: LAPSE_CLIENT_ID,
+				client_secret: LAPSE_CLIENT_SECRET,
+				code_verifier: codeVerifier,
+			}),
+		}
+	)
+
+	if (!response.ok) {
+		const error = await response.text()
+		throw new Error(`Failed to exchange Lapse code for token: ${error}`)
+	}
+
+	return response.json()
+}
+
+type LapseUserInfo = {
+	id: string
+	handle: string
+	displayName: string
+	profilePictureUrl: string
+}
+
+/**
+ * Fetches the calling user's Lapse profile
+ */
+export async function fetchLapseUserInfo(
+	accessToken: string
+): Promise<LapseUserInfo> {
+	const response = await fetch(
+		"https://api.lapse.hackclub.com/api/user/myself",
+		{
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		}
+	)
+
+	if (!response.ok) {
+		const error = await response.text()
+		throw new Error(`Failed to fetch Lapse user info: ${error}`)
+	}
+
+	const body = await response.json()
+	if (!body?.ok || !body?.data?.user) {
+		throw new Error(`Lapse API returned an error: ${JSON.stringify(body)}`)
+	}
+
+	return body.data.user
+}
+
+/**
+ * Links a Lapse account to an existing user
+ */
+export async function linkLapseAccount(
+	user: RecordId<"user">,
+	userInfo: LapseUserInfo,
+	tokenResponse: LapseTokenResponse
+): Promise<void> {
+	await db.query(linkLapseAccountQuery, {
+		userId: user,
+		lapseData: {
+			id: userInfo.id,
+			handle: userInfo.handle,
+			displayName: userInfo.displayName,
+			profilePictureUrl: userInfo.profilePictureUrl,
+			accessToken: tokenResponse.access_token,
+			refreshToken: tokenResponse.refresh_token,
+		},
+	})
 }

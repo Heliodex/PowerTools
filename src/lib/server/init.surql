@@ -31,3 +31,11 @@ DEFINE TABLE OVERWRITE user SCHEMAFULL TYPE NORMAL;
 	DEFINE FIELD OVERWRITE created ON user TYPE datetime DEFAULT ALWAYS time::now();
 	DEFINE FIELD OVERWRITE email ON user TYPE string
 		ASSERT string::is_email($value);
+	DEFINE FIELD OVERWRITE lapseData ON user TYPE option<object>;
+		DEFINE FIELD OVERWRITE lapseData.id ON user TYPE string;
+		DEFINE FIELD OVERWRITE lapseData.handle ON user TYPE string;
+		DEFINE FIELD OVERWRITE lapseData.displayName ON user TYPE string;
+		DEFINE FIELD OVERWRITE lapseData.profilePictureUrl ON user TYPE string;
+		DEFINE FIELD OVERWRITE lapseData.accessToken ON user TYPE string;
+		DEFINE FIELD OVERWRITE lapseData.refreshToken ON user TYPE string;
+	DEFINE INDEX IF NOT EXISTS uniqueLapseId ON user FIELDS lapseData.id UNIQUE;
