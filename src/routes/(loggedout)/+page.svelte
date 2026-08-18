@@ -23,8 +23,12 @@
 	<p class="text-center pb-8">
 		by <a href="https://hackclub.enterprise.slack.com/team/U07JH9LU1NC" target="_blank" rel="noreferrer">@Heliodex</a>
 	</p>
-	<p class="max-w-120">
+	<p class="max-w-120 pb-4">
 		Refurbish your frontend experience by building a mini JS framework or tool,	and win cloud credits to host it!
+	</p>
+	<p class="max-w-120">
+		Spend 1 hour building your tool and win a $5 grant card spendable at various vendors.<br />
+		<b>Track your time spent with <a href="https://lapse.hackclub.com/" target="_blank" rel="noreferrer">Lapse</a> so we can verify it!</b>
 	</p>
 </div>
 
@@ -43,52 +47,52 @@
 </p>
 
 <div id="faq">
-		<h2 class="pt-12 pb-4 text-center">
-			Frequently Asked Questions
-		</h2>
+	<h2 class="pt-12 pb-4 text-center">
+		Frequently Asked Questions
+	</h2>
 
-		<div class="mx-auto max-w-150 pb-8">
-			<Accordion class="flex flex-col gap-4">
-				<AccordionItem title="Who's eligible to join?">
-					The event is intended for high school students of any
-					experience level. Anyone aged 13-18 is eligible to
-					participate.
-					<br />
-					19 or over? Get the same prizes by
-					<a
-						href="https://pyramid.hackclub.com"
-						target="_blank"
-						rel="noopener noreferrer">
-						referring others!
-					</a>
-				</AccordionItem>
+	<div class="mx-auto max-w-150 pb-8">
+		<Accordion class="flex flex-col gap-4">
+			<AccordionItem title="Who's eligible to join?">
+				The event is intended for high school students of any
+				experience level. Anyone aged 13-18 is eligible to
+				participate.
+				<br />
+				19 or over? Get the same prizes by
+				<a
+					href="https://pyramid.hackclub.com"
+					target="_blank"
+					rel="noopener noreferrer">
+					referring others!
+				</a>
+			</AccordionItem>
 
-				<AccordionItem title="How much does it cost to join in?">
-					{name} is completely free to join and participate in. All prizes
-					are provided by us.
-				</AccordionItem>
+			<AccordionItem title="How much does it cost to join in?">
+				{name} is completely free to join and participate in. All prizes
+				are provided by us.
+			</AccordionItem>
 
-				<AccordionItem title="Who runs this?">
-					{name} is sponsored by
-					<a
-						href="https://hackclub.com"
-						target="_blank"
-						rel="noopener noreferrer">
-						Hack Club,
-					</a>
-					a US-based 501(c)(3) non-profit organisation. Hack Club aims
-					to incentivise high schoolers all over the world to advance their
-					programming skills and ship their projects.
-					<br />
-					<br />
-					We think you learn best when you're building, so we provide the
-					useful resources and the amazing community to help you do that.
-					We make, break, learn, and share projects together. Welcome to
-					the club!
-				</AccordionItem>
-			</Accordion>
-		</div>
+			<AccordionItem title="Who runs this?">
+				{name} is sponsored by
+				<a
+					href="https://hackclub.com"
+					target="_blank"
+					rel="noopener noreferrer">
+					Hack Club,
+				</a>
+				a US-based 501(c)(3) non-profit organisation. Hack Club aims
+				to incentivise high schoolers all over the world to advance their
+				programming skills and ship their projects.
+				<br />
+				<br />
+				We think you learn best when you're building, so we provide the
+				useful resources and the amazing community to help you do that.
+				We make, break, learn, and share projects together. Welcome to
+				the club!
+			</AccordionItem>
+		</Accordion>
 	</div>
+</div>
 
 
 <style>
