@@ -24,7 +24,11 @@
 			{#if user}
 				<li><a class="btn" href="/submit">Submit</a></li>
 			{:else}
-				<li><a class="btn" href="/login">Login</a></li>
+				<li>
+					<form action="/login" method="post">
+						<button class="btn" type="submit">Login</button>
+					</form>
+				</li>
 			{/if}
 		</ul>
 	</nav>
@@ -51,7 +55,7 @@
 	li {
 		@apply inline-block;
 
-		a {
+		a, button {
 			@apply text-black  bg-[#f7df1e] hover:bg-yellow-600 active:bg-yellow-400 shadow-amber-500;
 
 			box-shadow: 0.1rem 0.1rem 0 var(--tw-shadow-color);
