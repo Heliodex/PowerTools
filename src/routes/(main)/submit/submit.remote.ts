@@ -1,5 +1,5 @@
 import fs from "node:fs"
-import { redirect } from "@sveltejs/kit"
+import { error, redirect } from "@sveltejs/kit"
 import { type } from "arktype"
 import sharp from "sharp"
 import { authorise } from "#lib/server/auth.js"
@@ -84,7 +84,6 @@ type LapseTimelapse = {
 }
 
 export type TimelapsesResult = {
-	linked: boolean
 	error: string | null
 	since: string
 	timelapses: LapseTimelapse[]
@@ -102,7 +101,7 @@ export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
 	)
 	const lapse = result?.[0]
 	if (!lapse?.accessToken)
-		return { linked: false, error: null, since, timelapses: [] }
+		error(401, "Please link your lapse account to submit a project!")
 
 	try {
 		const response = await fetch(
@@ -113,14 +112,12 @@ export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
 		if (!response.ok) {
 			if (response.status === 401)
 				return {
-					linked: true,
 					error: "Your Lapse session has expired. Please re-link your Lapse account.",
 					since,
 					timelapses: [],
 				}
 
 			return {
-				linked: true,
 				error: `Failed to fetch timelapses from Lapse (status ${response.status}).`,
 				since,
 				timelapses: [],
@@ -130,7 +127,6 @@ export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
 		const body = await response.json()
 		if (!body?.ok || !body?.data?.timelapses)
 			return {
-				linked: true,
 				error: `Lapse API returned an error: ${JSON.stringify(body)}`,
 				since,
 				timelapses: [],
@@ -161,12 +157,11 @@ export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
 				})
 			)
 
-		return { linked: true, error: null, since, timelapses }
+		return { error: null, since, timelapses }
 	} catch (e) {
 		console.error("Failed to fetch Lapse timelapses:", e)
 
 		return {
-			linked: true,
 			error: "Failed to fetch timelapses from Lapse. Please try again.",
 			since,
 			timelapses: [],
