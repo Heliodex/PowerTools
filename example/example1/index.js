@@ -1,6 +1,6 @@
-import { Dom, tag, text } from "./dom.js"
+import { tag, text, VirtualDom } from "./dom.js"
 
-const dom = new Dom(
+const dom = new VirtualDom(
 	[tag("title").children(text("JS tools test"))],
 	[
 		tag("h1").children(text("JS tools test")),

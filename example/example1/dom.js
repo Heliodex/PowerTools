@@ -2,11 +2,11 @@
 import { renderElement, TagElement, TextNode } from "./elements"
 
 /**
- * Represents a HTML document, with a head and body section
+ * Represents a virtual HTML document, with a head and body section
  * @param {TagElement[]} head
  * @param {TagElement[]} body
  */
-export class Dom {
+export class VirtualDom {
 	/**
 	 * Creates a new Dom instance
 	 * @param {TagElement[]} head

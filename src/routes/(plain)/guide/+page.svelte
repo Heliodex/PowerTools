@@ -256,9 +256,7 @@ We're going to take a different route here by adding a script instead, which we'
 
 <Code filename="elements.js" code={`
 	export class TagElement extends Element {
-		attrs = {}
-		events = {}
-		childElements = []
+		// ...
 
 +		constructor(name) {
 +			// Always call the parent constructor first
@@ -285,9 +283,7 @@ We're going to take a different route here by adding a script instead, which we'
 
 <Code filename="elements.js" code={`
 	export class TagElement extends Element {
-		attrs = {}
-		events = {}
-		childElements = []
+		// ...
 
 		constructor(name) {
 			// Always call the parent constructor first
@@ -304,10 +300,140 @@ We're going to take a different route here by adding a script instead, which we'
 <Code filename="elements.js" code={`
 	export class TextNode extends Element {
 		constructor(text) {
-			super
+			super()
 
 +			if (typeof text !== "string") throw new Error("text must be a string")
 			this.text = text
 		}
+	}
+`} />
+
+<p>
+	Next, some functions for actually rendering these elements, turning them from virtual elements into real ones. Not necessarily in the main document yet, though they will be appended to it later.
+</p>
+
+<Code filename="elements.js" code={`
+	export class TextNode extends Element {
+		// ...
+
++		render() {
++			const node = document.createElement(this.name)
++
++			for (const [name, value] of Object.entries(this.attrs))
++				node.setAttribute(name, value)
++
++			for (const [event, handler] of Object.entries(this.events))
++				node.addEventListener(event, handler)
++
++			for (const child of this.childElements)
++				node.appendChild(renderElement(child))
++
++			return node
+		}
+	}
+`} />
+
+<Code filename="elements.js" code={`
+	export class TextNode extends Element {
+		// ...
+
++		render() {
++			const node = document.createElement(this.name)
++
++			for (const [name, value] of Object.entries(this.attrs))
++				node.setAttribute(name, value)
++
++			for (const [event, handler] of Object.entries(this.events))
++				node.addEventListener(event, handler)
++
++			for (const child of this.childElements)
++				node.appendChild(renderElement(child))
++
++			return node
+		}
+	}
+`} />
+
+<p>
+	Finally I'll add a function up at the top of the file to render elements regardless of their type. This might be useful if you want to do specific types of rendering for different elements, though we'll keep it simple and do the same for both text and tag elements for now.
+</p>
+
+<Code filename="elements.js" code={`
+	export class Element {}
+
++	// Transforms a virtual element to a DOM node
++	export function renderElement(element) {
++		if (element instanceof TextNode) return element.render()
++		if (element instanceof TagElement) return element.render()
++
++		throw new Error("unknown element type")
++	}
+`} />
+
+<p>
+	Now we'll add a class for the virtual DOM as a whole in a separate file, <b>dom.js</b> This will hold the elements for the head and the body of the document.
+</p>
+
+<Code filename="dom.js" code={`
+	// Import some classes from the elements module
+	import { renderElement, TagElement, TextNode } from "./elements"
+
+	// Represents a virtual HTML document, with a head and body section
+	export class VirtualDom {
+		constructor(head, body) {
+			this.head = head
+			this.body = body
+		}
+	}
+`} />
+
+<p>
+	Add in some type checking:
+</p>
+
+<Code filename="dom.js" code={`
+	export class VirtualDom {
+		constructor(head, body) {
++			if (!Array.isArray(head)) throw new Error("head must be an array")
++			if (!Array.isArray(body)) throw new Error("body must be an array")
+
+			this.head = head
+			this.body = body
+		}
+	}
+`} />
+
+<p>
+	And finally a function to render the virtual DOM to the page.
+</p>
+
+<Code filename="dom.js" code={`
+	export class VirtualDom {
+		// ...
+
++		render() {
++			for (const element of this.head) {
++				const node = renderElement(element)
++				document.head.appendChild(node)
++			}
++
++			for (const element of this.body) {
++				const node = renderElement(element)
++				document.body.appendChild(node)
++			}
++		}
+	}
+`} />
+
+<p>
+	For good measure, we'll add some shorter aliases for the <code>new TextNode()</code> and <code>new TagElement()</code> constructor functions.
+</p>
+
+<Code filename="dom.js" code={`
+	export class VirtualDom {
+		// ...
+
+		export const text = str => new TextNode(str)
+		export const tag = name => new TagElement(name)
 	}
 `} />
