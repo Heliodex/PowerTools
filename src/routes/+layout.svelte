@@ -1,11 +1,12 @@
 <script lang="ts">
 	import "./layout.css"
 	import favicon from "#lib/assets/favicon.svg"
-	import { getLoggedIn, login } from "./data.remote"
+	import { getIsAdmin, getLoggedIn, login } from "./data.remote"
 
 	let { children } = $props()
 
 	const user = $derived(await getLoggedIn())
+	const isAdmin = $derived(await getIsAdmin())
 </script>
 
 <svelte:head>
@@ -23,6 +24,9 @@
 				<li><a class="btn" href="/guide">Guide</a></li>
 			{#if user}
 				<li><a class="btn" href="/submit">Submit</a></li>
+				{#if isAdmin}
+					<li><a class="btn" href="/admin">Admin</a></li>
+				{/if}
 			{:else}
 				<li>
 					<form {...login} class="-mt-1.5">
