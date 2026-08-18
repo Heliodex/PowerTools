@@ -1,3 +1,5 @@
+import { writeFileSync } from "node:fs"
+
 let started = false
 
 // SurrealDB writes its PID into ./data/surreal/LOCK while it holds the database lock. Since the `started` flag resets whenever SvelteKit reloads this module, verify the lock is actually owned by a live process before spawning a second instance.
@@ -55,11 +57,17 @@ export default async () => {
 					`Failed to download SurrealDB: ${response.status} ${response.statusText}`
 				)
 
-			console.log("Download complete. Writing to file...")
+			console.log(
+				"Download complete.",
+				response.status,
+				response.headers.get("Content-Length")
+			)
+			console.log("Writing to file...")
 
 			const compressedPath = "/tmp/surreal.tgz"
 			// Write the raw archive bytes — decoding the body as text corrupts the gzip data
-			await Bun.write(compressedPath, response)
+			// await Bun.write(compressedPath, response)
+			writeFileSync(compressedPath, await response.arrayBuffer())
 
 			console.log("Extracting archive...")
 
