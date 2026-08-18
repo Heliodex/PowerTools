@@ -23,7 +23,7 @@
 		"typescript": "~6.0.3"
 	},
 	"dependencies": {
-		"@sveltejs/adapter-auto": "^7.0.1",
+		"@sveltejs/adapter-node": "^5.5.7",
 		"@sveltejs/kit": "next",
 		"@sveltejs/vite-plugin-svelte": "^7.3.0",
 		"@tailwindcss/vite": "^4.3.3",
