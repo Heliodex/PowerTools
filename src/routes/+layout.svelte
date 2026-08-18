@@ -52,7 +52,9 @@
 		@apply inline-block;
 
 		a {
-			@apply text-black  bg-[#f7df1e] hover:bg-yellow-600 active:bg-yellow-400;
+			@apply text-black  bg-[#f7df1e] hover:bg-yellow-600 active:bg-yellow-400 shadow-amber-500;
+
+			box-shadow: 0.1rem 0.1rem 0 var(--tw-shadow-color);
 		}
 	}
 </style>
