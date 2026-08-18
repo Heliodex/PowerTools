@@ -44,7 +44,7 @@ body {
 }
 
 a {
-	@apply underline text-blue-300 hover:text-blue-400 active:text-blue-200 transition-colors;
+	@apply underline text-yellow-300 hover:text-yellow-400 active:text-yellow-200 transition-colors;
 }
 
 .btn {
