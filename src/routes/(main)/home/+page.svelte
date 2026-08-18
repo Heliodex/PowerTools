@@ -21,15 +21,15 @@ Wanna <a href="/submit">submit</a>?
 	<p>Display name: {lapseData.displayName}</p>
 {:else}
 	<a
-		class="btn text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
-		href="/auth/lapse">
+		class="btn bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
+		href="/lapse">
 		Link Lapse account
 	</a>
 {/if}
 
 <form {...logout} class="pt-4">
 	<button
-		class="btn text-white bg-red-500 hover:bg-red-600 active:bg-red-400 font-bold">
+		class="btn bg-red-500 hover:bg-red-600 active:bg-red-400 font-bold">
 		Log out
 	</button>
 </form>
