@@ -10,7 +10,7 @@ RUN curl -sSf https://install.surrealdb.com | sh
 # ENV PATH="~/.surrealdb:$PATH"
 ENV PATH="/root/.surrealdb:$PATH"
 RUN pwd
-RUN echo $USER
+RUN whoami
 RUN echo $PATH
 
 # check that `surreal` is available
