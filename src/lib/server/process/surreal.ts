@@ -55,8 +55,10 @@ export default async () => {
 					`Failed to download SurrealDB: ${response.status} ${response.statusText}`
 				)
 
+			const compressedPath = "/tmp/surreal.tgz"
+			await Bun.write(compressedPath, await response.text())
+			await Bun.$`tar -xzf ${compressedPath} -C /tmp`
 			surrealPath = "/tmp/surreal"
-			await Bun.write(surrealPath, await response.text())
 			await Bun.$`chmod +x ${surrealPath}`
 
 			console.log("Installed SurrealDB successfully.")
