@@ -442,7 +442,7 @@ We're going to take a different route here by adding a script instead, which we'
 `} />
 
 <p>
-	Not super dynamic though. We'll go back to the <b>elements.js</b> file and add some helper functions to the <code>TagElement</code> class.
+	Not super dynamic yet though. We'll go back to the <b>elements.js</b> file and add some helper functions to the <code>TagElement</code> class.
 </p>
 
 <Code filename="elements.js" code={`

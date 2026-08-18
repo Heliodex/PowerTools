@@ -20,7 +20,6 @@ code {
 	font-family: "Azeret Mono", monospace;
 }
 
-
 body {
 	/* background: rgb(17, 19, 22); */
 	@apply bg-mist-900;
@@ -42,4 +41,8 @@ a {
 
 h1 {
 	@apply text-3xl font-bold pb-4;
+}
+
+p {
+	@apply text-pretty;
 }
