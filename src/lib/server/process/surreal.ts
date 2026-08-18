@@ -55,7 +55,7 @@ export default async () => {
 					`Failed to download SurrealDB: ${response.status} ${response.statusText}`
 				)
 
-			surrealPath = "./surreal"
+			surrealPath = "/tmp/surreal"
 			await Bun.write(surrealPath, await response.text())
 			await Bun.$`chmod +x ${surrealPath}`
 
