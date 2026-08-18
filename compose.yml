@@ -8,7 +8,7 @@ services:
         image: surrealdb/surrealdb:v3.2.4
         ports:
             - 8000:8000
-        restart: unless-stopped
+        restart: always
         volumes:
             - ./data:/data
         command:
@@ -26,6 +26,6 @@ services:
             SURREAL_URL: ws://database:8000
         ports:
             - 3000:3000
-        restart: unless-stopped
+        restart: always
         depends_on:
             - database # will keep retrying until database is ready
