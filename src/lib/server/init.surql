@@ -18,8 +18,7 @@ DEFINE TABLE OVERWRITE project SCHEMAFULL TYPE NORMAL;
 	DEFINE FIELD OVERWRITE name ON project TYPE string;
 	DEFINE FIELD OVERWRITE description ON project TYPE string;
 	DEFINE FIELD OVERWRITE codeUrl ON project TYPE option<string>;
-	DEFINE FIELD OVERWRITE projectType ON project TYPE string;
-	DEFINE FIELD OVERWRITE ai ON project TYPE boolean;
+	DEFINE FIELD OVERWRITE ai ON project TYPE bool;
 	DEFINE FIELD OVERWRITE reviewerNotes ON project TYPE option<string>;
 
 DEFINE TABLE OVERWRITE session SCHEMAFULL TYPE NORMAL;

@@ -8,39 +8,21 @@ import { form, getRequestEvent } from "$app/server"
 import createProjectQuery from "./createProject.surql?raw"
 
 const schema = type({
-	"image?": "Blob | undefined",
+	"image?": "File",
 	name: "string",
 	description: "string",
 	"codeUrl?": "string",
-	robloxId: "string.integer.parse",
-	projectType: "string",
-	"declarations?": "string[]",
+	"ai?": "boolean",
 	"reviewerNotes?": "string",
 })
 
 export const newProjectForm = form(
 	schema,
-	async ({
-		image,
-		name,
-		description,
-		codeUrl,
-		projectType,
-		ai,
-		reviewerNotes,
-	}) => {
+	async ({ image, name, description, codeUrl, ai, reviewerNotes }) => {
 		const { locals } = getRequestEvent()
 		const { user } = await authorise(locals)
 
-		console.log(
-			image,
-			name,
-			description,
-			codeUrl,
-			projectType,
-			ai,
-			reviewerNotes
-		)
+		console.log(image, name, description, codeUrl, ai, reviewerNotes)
 
 		if (!fs.existsSync("./data/images"))
 			fs.mkdirSync("./data/images", { recursive: true })
@@ -52,7 +34,6 @@ export const newProjectForm = form(
 				name,
 				description,
 				codeUrl,
-				projectType,
 				ai,
 				reviewerNotes,
 			}
