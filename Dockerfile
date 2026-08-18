@@ -7,7 +7,7 @@ WORKDIR /app
 RUN curl -sSf https://install.surrealdb.com | sh
 
 # make sure the `surreal` binary is on PATH
-# ENV PATH="/usr/local/bin:$PATH"
+ENV PATH="/usr/local/bin:$PATH"
 
 # check that `surreal` is available
 RUN surreal --version
