@@ -34,8 +34,17 @@ export default async () => {
 	try {
 		if (!Bun.which("surreal")) {
 			console.log("SurrealDB is not installed. Installing...")
+			// Curl may not be available, so download the installer script with fetch before running it.
+			const response = await fetch("https://install.surrealdb.com")
+			if (!response.ok)
+				throw new Error(
+					`Failed to download installer: ${response.status} ${response.statusText}`
+				)
+
+			const installerPath = "/tmp/surrealdb-install.sh"
+			await Bun.write(installerPath, await response.text())
 			// Bun.$ inherits stdout/stderr by default, so the installer's logs print to the terminal
-			await Bun.$`curl -sSf https://install.surrealdb.com | sh`
+			await Bun.$`sh ${installerPath}`
 		}
 
 		const proc = Bun.spawn(
