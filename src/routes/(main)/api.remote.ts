@@ -22,11 +22,6 @@ export const logout = form(async () => {
 	redirect(302, "/")
 })
 
-export const statusping = form(() => {
-	// does nothing
-	// hooks.server.ts will update the user's status when pinged
-})
-
 export const lapseLogin = form(async () => {
 	const { cookies } = getRequestEvent()
 
