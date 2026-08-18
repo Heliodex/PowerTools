@@ -10,13 +10,14 @@ services:
             - 8000:8000
         restart: always
         volumes:
-            - ./data:/data
-        command:
-            - start
-            - -l=trace
-            - -u=root
-            - -p=root
-            - surrealkv://data
+            - ./data:data
+        # command:
+        #     - start
+        #     - -l=trace
+        #     - -u=root
+        #     - -p=root
+        #     - surrealkv://data
+        command: start -l=trace -u=root -p=root surrealkv://data
 
     site:
         build: .
