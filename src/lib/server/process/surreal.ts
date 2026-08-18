@@ -41,8 +41,8 @@ export default async () => {
 
 	let surrealPath = "surreal"
 
-	try {
-		if (!Bun.which("surreal")) {
+	if (!Bun.which("surreal"))
+		try {
 			console.log("SurrealDB is not installed. Installing...")
 
 			const url = getDownloadPath()
@@ -62,8 +62,12 @@ export default async () => {
 			// test startup by just running surreal
 			const res = await Bun.$`${surrealPath}`
 			console.log(res.stdout.toString())
+		} catch {
+			console.error("Failed to install SurrealDB.")
+			process.exit(1)
 		}
 
+	try {
 		const proc = Bun.spawn(
 			[
 				surrealPath,
