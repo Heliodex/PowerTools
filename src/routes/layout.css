@@ -2,18 +2,30 @@
 
 @font-face {
 	font-family: Lexend;
-	src: url(/Lexend.ttf) format("truetype");
+	src:
+		url(/Lexend.woff2) format("woff2"),
+		url(/Lexend.ttf) format("truetype");
 	font-display: swap;
 }
 
 @font-face {
 	font-family: "Azeret Mono";
-	src: url(/AzeretMono.ttf) format("truetype");
+	src:
+		url(/AzeretMono.woff2) format("woff2"),
+		url(/AzeretMono.ttf) format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Sofia Sans";
+	src:
+		url(/SofiaSans.woff2) format("woff2"),
+		url(/SofiaSans.ttf) format("truetype");
 	font-display: swap;
 }
 
 *:not(code) {
-	font-family: "Lexend", sans-serif;
+	font-family: Lexend, sans-serif;
 }
 
 code {
@@ -37,10 +49,6 @@ a {
 
 .btn {
 	@apply cursor-pointer transition-colors no-underline rounded-lg px-4 py-2;
-}
-
-h1 {
-	@apply text-3xl font-bold pb-4;
 }
 
 p {
@@ -100,4 +108,23 @@ details:hover:not([open]) {
 
 input[type="checkbox"] {
 	@apply w-4 h-4 cursor-pointer;
+}
+
+h1,
+h2,
+h3 {
+	font-family: "Sofia Sans", Lexend, sans-serif;
+	font-weight: 1000;
+}
+
+h1 {
+	@apply text-5xl pb-4 text-[#f7df1e];
+}
+
+h2 {
+	@apply text-4xl pb-4 underline decoration-[#f7df1e];
+}
+
+h3 {
+	@apply text-3xl pb-4;
 }
