@@ -55,10 +55,18 @@ export default async () => {
 					`Failed to download SurrealDB: ${response.status} ${response.statusText}`
 				)
 
+			console.log("Download complete. Writing to file...")
+
 			const compressedPath = "/tmp/surreal.tgz"
 			// Write the raw archive bytes — decoding the body as text corrupts the gzip data
 			await Bun.write(compressedPath, response)
+
+			console.log("Extracting archive...")
+
 			await Bun.$`tar -xzf ${compressedPath} -C /tmp`
+
+			console.log("Extracted archive.")
+
 			surrealPath = "/tmp/surreal"
 			await Bun.$`chmod +x ${surrealPath}`
 
