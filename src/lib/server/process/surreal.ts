@@ -32,6 +32,12 @@ export default async () => {
 	started = true
 
 	try {
+		if (!Bun.which("surreal")) {
+			console.log("SurrealDB is not installed. Installing...")
+			// Bun.$ inherits stdout/stderr by default, so the installer's logs print to the terminal
+			await Bun.$`curl -sSf https://install.surrealdb.com | sh`
+		}
+
 		const proc = Bun.spawn(
 			[
 				"surreal",
@@ -58,7 +64,7 @@ export default async () => {
 		})
 	} catch {
 		console.error(
-			"Failed to start SurrealDB. Please make sure it is installed and accessible as `surreal`."
+			"Failed to start SurrealDB. If the automatic install failed, check the logs above; otherwise make sure `surreal` is installed and on PATH."
 		)
 		process.exit(1)
 	}
