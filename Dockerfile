@@ -6,6 +6,12 @@ WORKDIR /app
 # SurrealDB is spawned by the site itself (#lib/server/process/surreal.ts) rather than run as a separate container, so install the `surreal` binary (to /usr/local/bin, which is already on PATH)
 RUN curl -sSf https://install.surrealdb.com | sh
 
+# make sure the `surreal` binary is on PATH
+# ENV PATH="/usr/local/bin:$PATH"
+
+# check that `surreal` is available
+RUN surreal --version
+
 # install dependencies into temp directory
 # this will cache them and speed up future builds
 FROM base AS install
