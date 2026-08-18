@@ -43,7 +43,7 @@
 
 	<button
 		type="submit"
-		class="btn bg-blue-500 hover:bg-blue-600 active:bg-blue-400 px-3 py-1.5 rounded-lg font-bold">
+		class="btn bg-blue-500 hover:bg-blue-600 active:bg-blue-400 font-bold">
 		Submit
 	</button>
 </form>
