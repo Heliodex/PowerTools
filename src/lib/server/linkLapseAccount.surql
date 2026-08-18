@@ -1,6 +1,6 @@
-LET $existing = SELECT VALUE id FROM user WHERE lapseData.id = $lapseData.id;
+LET $other = SELECT VALUE id FROM user WHERE lapseData.id = $lapseData.id AND id != $userId;
 
-IF $existing && $existing != $userId {
+IF $other {
 	THROW "This Lapse account is already linked to another user";
 };
 

@@ -6,9 +6,15 @@ import {
 	fetchLapseUserInfo,
 	linkLapseAccount,
 } from "#lib/server/auth.js"
+import { dev } from "$app/env"
 
 export async function GET({ cookies, url }: RequestEvent) {
 	const { user } = await authorise()
+
+	// The provider redirects back here with `error` when the user denies consent
+	// or something goes wrong during authorization.
+	const authError = url.searchParams.get("error")
+	if (authError) error(400, `Lapse authorization failed: ${authError}`)
 
 	// Verify state to prevent CSRF
 	const code = url.searchParams.get("code")
@@ -31,7 +37,13 @@ export async function GET({ cookies, url }: RequestEvent) {
 		await linkLapseAccount(user.id, userInfo, tokenResponse)
 	} catch (e) {
 		console.error("Lapse OAuth callback error:", e)
-		error(500, "Lapse OAuth callback failed")
+		const message = e instanceof Error ? e.message : String(e)
+		error(
+			500,
+			dev
+				? `Lapse OAuth callback failed: ${message}`
+				: "Lapse OAuth callback failed"
+		)
 	}
 
 	redirect(302, "/home")
