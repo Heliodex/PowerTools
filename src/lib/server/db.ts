@@ -6,7 +6,6 @@ import {
 	Table,
 } from "surrealdb"
 import initQuery from "#lib/server/init.surql?raw"
-import { building } from "$app/env"
 
 export const db = new Surreal({
 	codecOptions: {

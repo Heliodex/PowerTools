@@ -67,7 +67,10 @@ export default async () => {
 			const compressedPath = "/tmp/surreal.tgz"
 			// Write the raw archive bytes — decoding the body as text corrupts the gzip data
 			// await Bun.write(compressedPath, response)
-			writeFileSync(compressedPath, await response.arrayBuffer())
+			writeFileSync(
+				compressedPath,
+				new Uint8Array(await response.arrayBuffer())
+			)
 
 			console.log("Extracting archive...")
 
