@@ -55,26 +55,26 @@ p {
 	@apply text-pretty;
 }
 
-form fieldset {
+form label {
 	display: flex;
 	flex-direction: column;
 	@apply pb-6;
 
-	& label {
+	& span {
 		@apply pb-2;
 	}
 
-	/* apply to label next to required inputs */
-	&:has(input[required]) label::after,
-	&:has(select[required]) label::after,
-	&:has(textarea[required]) label::after {
+	/* apply to span next to required inputs */
+	&:has(input[required]) span::after,
+	&:has(select[required]) span::after,
+	&:has(textarea[required]) span::after {
 		content: "*";
 		@apply text-red-500;
 	}
 	&:not(:has(input[required])):not(:has(select[required])):not(
 			:has(textarea[required])
 		)
-		label::after {
+		span::after {
 		content: " (optional)";
 		@apply text-sm text-neutral-400;
 	}
@@ -127,4 +127,8 @@ h2 {
 
 h3 {
 	@apply text-3xl pb-4;
+}
+
+button[disabled] {
+	@apply opacity-50 pointer-events-none;
 }

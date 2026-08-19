@@ -74,43 +74,42 @@
 		</fieldset>
 	{/if}
 
-	<fieldset>
-		<label for="image">Project image</label>
-		<input type="file" name="image" id="image" accept="image/*" />
-	</fieldset>
+	<label>
+		<span>Project image</span>
+		<input {...newProjectForm.fields.image.as("file")} />
+	</label>
 
-	<fieldset>
-		<label for="name">Project name</label>
-		<input type="text" name="name" id="name" required />
-	</fieldset>
+	<label>
+		<span>Project name</span>
+		<input {...newProjectForm.fields.name.as("text")} />
+	</label>
 
-	<fieldset>
-		<label for="description">Project description</label>
-		<textarea name="description" id="description" required></textarea>
-	</fieldset>
+	<label>
+		<span>Project description</span>
+		<textarea {...newProjectForm.fields.description.as("text")}></textarea>
+	</label>
 
-	<fieldset>
-		<label for="codeUrl">Code URL</label>
+	<label>
+		<span>Code URL</span>
 		<input
-			type="url"
-			name="codeUrl"
-			id="codeUrl"
+			{...newProjectForm.fields.codeUrl.as("url")}
 			placeholder="https://github.com/..." />
-	</fieldset>
+	</label>
 
-	<fieldset>
-		<div>
-			<input type="checkbox" name="ai" id="ai" />
-			<label for="ai" class="pl-2">I used generative AI in building this project</label>
-		</div>
-	</fieldset>
+	<label>
+		<span>
+			<input {...newProjectForm.fields.ai.as("checkbox")} />
+			I used generative AI in building this project
+		</span>
+	</label>
 
-	<fieldset>
-		<label for="reviewerNotes">Extra reviewer notes</label>
-		<textarea name="reviewerNotes" id="reviewerNotes"></textarea>
-	</fieldset>
+	<label>
+		<span>Extra reviewer notes</span>
+		<textarea {...newProjectForm.fields.reviewerNotes.as("text")}></textarea>
+	</label>
 
 	<button
+		disabled={!!timelapseData.error}
 		type="submit"
 		class="btn bg-blue-500 hover:bg-blue-600 active:bg-blue-400 font-bold">
 		Submit

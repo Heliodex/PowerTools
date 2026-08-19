@@ -7,6 +7,8 @@ import { db, type RecordId } from "#lib/server/db.js"
 import { LAPSE_TIMELAPSE_SINCE } from "$app/env/private"
 import { form, query } from "$app/server"
 import createProjectQuery from "./createProject.surql?raw"
+import getLapseDataQuery from "./getLapseData.surql?raw"
+
 
 const schema = type({
 	"image?": "File",
@@ -96,7 +98,7 @@ export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
 	const sinceMs = Date.parse(since)
 
 	const [result] = await db.query<{ id: string; accessToken: string }[][]>(
-		"SELECT VALUE { id: lapseData.id, accessToken: lapseData.accessToken } FROM $user",
+		getLapseDataQuery,
 		{ user: user.id }
 	)
 	const lapse = result?.[0]
