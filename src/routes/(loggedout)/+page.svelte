@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Accordion from "#components/Accordion.svelte"
 	import AccordionItem from "#components/AccordionItem.svelte"
-	import powertools from "./powertools.svg"
+	import powertools from "#lib/assets/powertools.svg"
 
 	const name = "Power Tools"
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import "./layout.css"
-	import favicon from "#lib/assets/favicon.svg"
+	import favicon from "#lib/assets/powertools.svg"
 	import { getIsAdmin, getLoggedIn, login } from "./data.remote"
 
 	let { children } = $props()
