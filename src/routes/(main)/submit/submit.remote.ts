@@ -53,6 +53,7 @@ export const newProjectForm = form(
 		const [latestCreated] = await db.query<Date[]>(getLatestProjectQuery, {
 			user,
 		})
+		console.log(latestCreated)
 		if (latestCreated && Date.now() - latestCreated.getTime() < 60_000)
 			invalid(
 				"You've already submitted a project recently. Please wait a minute before submitting again."
