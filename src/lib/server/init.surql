@@ -39,4 +39,4 @@ DEFINE TABLE OVERWRITE user SCHEMAFULL TYPE NORMAL;
 		DEFINE FIELD OVERWRITE lapseData.profilePictureUrl ON user TYPE string;
 		DEFINE FIELD OVERWRITE lapseData.accessToken ON user TYPE string;
 		DEFINE FIELD OVERWRITE lapseData.refreshToken ON user TYPE option<string>;
-	DEFINE INDEX IF NOT EXISTS uniqueLapseId ON user FIELDS lapseData.id UNIQUE;
+	DEFINE INDEX IF NOT EXISTS uniqueLapseId ON user COLUMNS lapseData.id UNIQUE;
