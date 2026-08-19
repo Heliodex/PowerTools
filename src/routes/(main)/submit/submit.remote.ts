@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import { error, redirect } from "@sveltejs/kit"
-import { type } from "arktype"
 import sharp from "sharp"
+import { type } from "#lib/arktype.js"
 import { authorise } from "#lib/server/auth.js"
 import { db, type RecordId } from "#lib/server/db.js"
 import { LAPSE_TIMELAPSE_SINCE } from "$app/env/private"
