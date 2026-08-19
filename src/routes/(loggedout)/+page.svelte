@@ -14,10 +14,8 @@
 		alt="Hack Club" />
 </a>
 
-<div class="text-center pb-8">
-	<div class="flex justify-center">
-		<img src={powertools} alt="Power Tools logo" class="w-72" />
-	</div>
+<div class="text-center pb-8 flex flex-col items-center">
+	<img src={powertools} alt="Power Tools logo" class="w-72" />
 
 	<h1 class="text-6xl! pb-0!">Power Tools</h1>
 	<p class="text-center pb-8">
