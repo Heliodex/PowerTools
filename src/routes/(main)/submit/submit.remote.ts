@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import { error, invalid, redirect } from "@sveltejs/kit"
 import sharp from "sharp"
-import { type } from "#lib/arktype.js"
+import { makeMessage, type } from "#lib/arktype.js"
 import { authorise } from "#lib/server/auth.js"
 import { db, type RecordId } from "#lib/server/db.js"
 import { LAPSE_TIMELAPSE_SINCE } from "$app/env/private"
@@ -10,36 +10,43 @@ import createProjectQuery from "./createProject.surql?raw"
 import getLapseDataQuery from "./getLapseData.surql?raw"
 import getLatestProjectQuery from "./getLatestProject.surql?raw"
 
+const messageName = makeMessage("name", "please give your project a name")
+const messageDescription = makeMessage(
+	"description",
+	"please add a description of your project"
+)
+const messageCodeUrl = makeMessage(
+	"codeUrl",
+	"please provide a URL to your project's code"
+)
+const messagePlayableUrl = makeMessage(
+	"playableUrl",
+	"please provide a URL to your project's playable version"
+)
+const messageTimelapseIds = makeMessage(
+	"timelapseIds",
+	"please select at least one timelapse"
+)
+
 const schema = type({
 	"image?": type("Blob").as<File>(),
-	name: "string >= 1",
-	description: "string >= 1",
-	codeUrl: "string >= 1",
-	playableUrl: "string >= 1",
+	name: type("string >= 1").configure(...messageName),
+	description: type("string >= 1").configure(...messageDescription),
+	codeUrl: type("string >= 1").configure(...messageCodeUrl),
+	playableUrl: type("string >= 1").configure(...messagePlayableUrl),
 	"ai?": "boolean",
 	"reviewerNotes?": "string",
-	timelapseIds: "string[] >= 1",
+	timelapseIds: type("string[] >= 1").configure(...messageTimelapseIds),
+	"howHear?": "string",
+	"howDoingWell?": "string",
+	"howImprove?": "string",
+	"howLikelyRecommend?": "1 <= number.integer <= 10",
 })
-	.configure(
-		{ message: () => "please give your project a name." },
-		n => n.kind === "required" && n.expression.startsWith("name:")
-	)
-	.configure(
-		{ message: () => "please add a description of your project." },
-		n => n.kind === "required" && n.expression.startsWith("description:")
-	)
-	.configure(
-		{ message: () => "please provide a URL to your project's code." },
-		n => n.kind === "required" && n.expression.startsWith("codeUrl:")
-	)
-	.configure(
-		{ message: () => "please provide a URL to your project's playable version." },
-		n => n.kind === "required" && n.expression.startsWith("playableUrl:")
-	)
-	.configure(
-		{ message: () => "please select at least one timelapse." },
-		n => n.kind === "required" && n.expression.startsWith("timelapseIds:")
-	)
+	.configure(...messageName)
+	.configure(...messageDescription)
+	.configure(...messageCodeUrl)
+	.configure(...messagePlayableUrl)
+	.configure(...messageTimelapseIds)
 
 export const newProjectForm = form(
 	schema,
@@ -51,6 +58,10 @@ export const newProjectForm = form(
 		playableUrl,
 		ai,
 		reviewerNotes,
+		howHear,
+		howDoingWell,
+		howImprove,
+		howLikelyRecommend,
 		timelapseIds,
 	}) => {
 		const { user } = await authorise()
@@ -72,8 +83,6 @@ export const newProjectForm = form(
 
 			console.log("compressing")
 			const bytes = await sharp(await image.arrayBuffer())
-				// size subject to change
-				.resize(1280, 720, { fit: "cover" })
 				.avif()
 				.toBuffer()
 			console.log("compresesd")
@@ -98,6 +107,10 @@ export const newProjectForm = form(
 			playableUrl,
 			ai: ai ?? false,
 			reviewerNotes,
+			howHear,
+			howDoingWell,
+			howImprove,
+			howLikelyRecommend,
 			timelapseIds,
 		}
 

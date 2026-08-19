@@ -13,7 +13,7 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<header class="px-4 max-w-280 mx-auto flex">
+<header class="max-w-280 mx-auto flex">
 	<nav>
 		<ul class="list-none p-0 m-0 flex gap-8 py-6">
 			{#if user}

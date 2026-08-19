@@ -99,11 +99,6 @@
 		animation-iteration-count: 2;
 	}
 
-	ul {
-		list-style-type: disc;
-		padding-left: 1.5rem;
-	}
-
 	@keyframes rotate {
 		from {
 			transform: rotate(0deg);

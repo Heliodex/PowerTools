@@ -109,6 +109,10 @@ input[type="checkbox"] {
 	@apply w-4 h-4 cursor-pointer;
 }
 
+input[type="number"] {
+	@apply w-50;
+}
+
 h1,
 h2,
 h3 {
@@ -130,4 +134,14 @@ h3 {
 
 button[disabled] {
 	@apply opacity-50 pointer-events-none;
+}
+
+
+:not(nav) ul {
+	list-style-type: disc;
+	padding-left: 1.5rem;
+}
+
+hr {
+	@apply pb-6 border-t border-yellow-800;
 }

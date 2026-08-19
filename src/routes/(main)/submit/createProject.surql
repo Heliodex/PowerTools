@@ -6,6 +6,10 @@ LET $project = CREATE ONLY project CONTENT {
 	playableUrl: $playableUrl,
 	ai: $ai,
 	reviewerNotes: $reviewerNotes,
+	howHear: $howHear,
+	howDoingWell: $howDoingWell,
+	howImprove: $howImprove,
+	howLikelyRecommend: $howLikelyRecommend,
 	lapseTimelapses: $timelapseIds
 } RETURN VALUE id;
 

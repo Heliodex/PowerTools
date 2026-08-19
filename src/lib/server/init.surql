@@ -21,6 +21,11 @@ DEFINE TABLE OVERWRITE project SCHEMAFULL TYPE NORMAL;
 	DEFINE FIELD OVERWRITE playableUrl ON project TYPE string;
 	DEFINE FIELD OVERWRITE ai ON project TYPE bool;
 	DEFINE FIELD OVERWRITE reviewerNotes ON project TYPE option<string>;
+	DEFINE FIELD OVERWRITE howHear ON project TYPE option<string>;
+	DEFINE FIELD OVERWRITE howDoingWell ON project TYPE option<string>;
+	DEFINE FIELD OVERWRITE howImprove ON project TYPE option<string>;
+	DEFINE FIELD OVERWRITE howLikelyRecommend ON project TYPE option<int>
+		ASSERT 1 <= $value AND $value <= 10;
 	DEFINE FIELD OVERWRITE lapseTimelapses ON project TYPE array<string>;
 
 DEFINE TABLE OVERWRITE session SCHEMAFULL TYPE NORMAL;

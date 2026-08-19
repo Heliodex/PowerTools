@@ -75,11 +75,15 @@
 	{/if}
 
 	<label>
-		<span>Project image</span>
-		<input {...newProjectForm.fields.image.as("file")} />
+		<span>Project image or screenshot</span>
+		<input {...newProjectForm.fields.image.as("file")} required />
 		{#each newProjectForm.fields.image.issues() ?? [] as issue}
 			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
 		{/each}
+		<p class="pt-2 text-sm text-neutral-400">
+			To clarify, a screenshot of the working output or a demo page made with your tool/framework would be great!<br/>
+			We don't need to see the code, you can link it in the <b>Code URL</b> field below.
+		</p>
 	</label>
 
 	<label>
@@ -106,6 +110,34 @@
 		{#each newProjectForm.fields.codeUrl.issues() ?? [] as issue}
 			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
 		{/each}
+		<p class="pt-2 text-sm text-neutral-400">
+			A link to your project's code repository on GitHub or similar.
+		</p>
+	</label>
+
+	<label>
+		<span>Playable URL</span>
+		<input
+			{...newProjectForm.fields.playableUrl.as("url")}
+			placeholder="https://example.com/..." required />
+		{#each newProjectForm.fields.playableUrl.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
+		<div class="pt-2 text-sm text-neutral-400">
+			<p>
+				Somewhere where we can see the working output (not just the code) of your project.<br />
+				If you have your HTML and JS files ready, you can try the following to get it deployed quickly:
+			</p>
+			<ul>
+				<li><a target="_blank" rel="noreferrer" href="https://app.netlify.com/drop">Netlify Drop</a></li>
+				<li><a target="_blank" rel="noreferrer" href="https://cloudflare.com/drop/">Cloudflare Drop</a></li>
+				<li><a target="_blank" rel="noreferrer" href="https://vercel.com/drop">Vercel Drop</a></li>
+				<li><a target="_blank" rel="noreferrer" href="https://docs.github.com/en/pages">GitHub Pages</a></li>
+			</ul>
+			<p>
+				otherwise, don't hesitate to ask for assistance in <a target="_blank" rel="noreferrer" href="https://app.slack.com/client/E09V59WQY1E/C0BQWJW532R">#ysws-power-tools-help</a>!
+			</p>
+		</div>
 	</label>
 
 	<label>
@@ -122,6 +154,43 @@
 		<span>Extra reviewer notes</span>
 		<textarea {...newProjectForm.fields.reviewerNotes.as("text")}></textarea>
 		{#each newProjectForm.fields.reviewerNotes.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
+		<p class="pt-2 text-sm text-neutral-400">
+			Add anything else here you'd like us to know about your project.
+		</p>
+	</label>
+
+	<hr />
+
+	<label>
+		<span>How did you hear about this programme?</span>
+		<textarea {...newProjectForm.fields.howHear.as("text")}></textarea>
+		{#each newProjectForm.fields.howHear.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
+	</label>
+
+	<label>
+		<span>How are we doing well?</span>
+		<textarea {...newProjectForm.fields.howDoingWell.as("text")}></textarea>
+		{#each newProjectForm.fields.howDoingWell.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
+	</label>
+
+	<label>
+		<span>How can we improve?</span>
+		<textarea {...newProjectForm.fields.howImprove.as("text")}></textarea>
+		{#each newProjectForm.fields.howImprove.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
+	</label>
+
+	<label>
+		<span>On a scale of 1 (least likely) to 10 (most likely), how likely would you be to recommend this programme (or a very similar future one) to a friend?</span>
+		<input {...newProjectForm.fields.howLikelyRecommend.as("number")} min="1" max="10" step="1" />
+		{#each newProjectForm.fields.howLikelyRecommend.issues() ?? [] as issue}
 			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
 		{/each}
 	</label>
