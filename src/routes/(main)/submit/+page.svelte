@@ -84,7 +84,7 @@
 
 	<label>
 		<span>Project name</span>
-		<input {...newProjectForm.fields.name.as("text")} />
+		<input {...newProjectForm.fields.name.as("text")} required />
 		{#each newProjectForm.fields.name.issues() ?? [] as issue}
 			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
 		{/each}
@@ -92,7 +92,7 @@
 
 	<label>
 		<span>Project description</span>
-		<textarea {...newProjectForm.fields.description.as("text")}></textarea>
+		<textarea {...newProjectForm.fields.description.as("text")} required></textarea>
 		{#each newProjectForm.fields.description.issues() ?? [] as issue}
 			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
 		{/each}
@@ -102,7 +102,7 @@
 		<span>Code URL</span>
 		<input
 			{...newProjectForm.fields.codeUrl.as("url")}
-			placeholder="https://github.com/..." />
+			placeholder="https://github.com/..." required />
 		{#each newProjectForm.fields.codeUrl.issues() ?? [] as issue}
 			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
 		{/each}
