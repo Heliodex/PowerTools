@@ -84,7 +84,8 @@ export function getHackClubAuthUrl(state: string): string {
 		client_id: HACKCLUB_CLIENT_ID,
 		redirect_uri: HACKCLUB_REDIRECT_URI,
 		response_type: "code",
-		scope: "openid profile email phone address birthdate slack_id verification_status",
+		// "phone address birthdate" scopes are HQ-official only
+		scope: "openid profile email slack_id verification_status",
 		state,
 	})
 	return `https://auth.hackclub.com/oauth/authorize?${params.toString()}`
@@ -122,21 +123,22 @@ type HackClubUserInfo = {
 		first_name?: string
 		last_name?: string
 		email_verified?: boolean
-		phone_number?: string
-		phone_number_verified?: boolean
-		birthday?: string
+		// HQ-official only (phone, birthdate, address scopes):
+		// phone_number?: string
+		// phone_number_verified?: boolean
+		// birthday?: string
 		slack_id?: string
 		verification_status?: string
 		ysws_eligible?: boolean
-		addresses?: {
-			line_1?: string
-			line_2?: string
-			city?: string
-			state?: string
-			postal_code?: string
-			country?: string
-			primary?: boolean
-		}[]
+		// addresses?: {
+		// 	line_1?: string
+		// 	line_2?: string
+		// 	city?: string
+		// 	state?: string
+		// 	postal_code?: string
+		// 	country?: string
+		// 	primary?: boolean
+		// }[]
 	}
 	scopes: string[]
 }
@@ -203,39 +205,42 @@ export async function findOrCreateUser(
 		first_name,
 		last_name,
 		email_verified,
-		phone_number,
-		phone_number_verified,
-		birthday,
+		// HQ-official only (phone, birthdate, address scopes):
+		// phone_number,
+		// phone_number_verified,
+		// birthday,
 		slack_id,
 		verification_status,
 		ysws_eligible,
-		addresses,
+		// addresses,
 	} = userInfo.identity
 
-	const address = addresses?.find(a => a.primary) ?? addresses?.[0]
+	// HQ-official only:
+	// const address = addresses?.find(a => a.primary) ?? addresses?.[0]
 
 	const extraInfo = {
 		firstName: first_name ?? "",
 		lastName: last_name ?? "",
 		emailVerified: email_verified ?? false,
-		phoneNumber: phone_number ?? "",
-		phoneNumberVerified: phone_number_verified ?? false,
-		birthdate: birthday ?? "",
+		// HQ-official only:
+		// phoneNumber: phone_number ?? "",
+		// phoneNumberVerified: phone_number_verified ?? false,
+		// birthdate: birthday ?? "",
 		slackId: slack_id ?? "",
 		verificationStatus: verification_status ?? "",
 		yswsEligible: ysws_eligible ?? false,
-		address: address
-			? {
-					streetAddress:
-						[address.line_1, address.line_2]
-							.filter(Boolean)
-							.join(", ") || null,
-					locality: address.city ?? null,
-					region: address.state ?? null,
-					postalCode: address.postal_code ?? null,
-					country: address.country ?? null,
-				}
-			: null,
+		// address: address
+		// 	? {
+		// 			streetAddress:
+		// 				[address.line_1, address.line_2]
+		// 					.filter(Boolean)
+		// 					.join(", ") || null,
+		// 			locality: address.city ?? null,
+		// 			region: address.state ?? null,
+		// 			postalCode: address.postal_code ?? null,
+		// 			country: address.country ?? null,
+		// 		}
+		// 	: null,
 	}
 
 	const [, userId] = await db.query<RecordId<"user">[]>(

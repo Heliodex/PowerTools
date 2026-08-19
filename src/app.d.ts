@@ -12,19 +12,20 @@ declare global {
 			firstName: string
 			lastName: string
 			emailVerified: boolean
-			phoneNumber: string
-			phoneNumberVerified: boolean
-			birthdate: string
+			// HQ-official only (phone, birthdate, address scopes):
+			// phoneNumber: string
+			// phoneNumberVerified: boolean
+			// birthdate: string
 			slackId: string
 			verificationStatus: string
 			yswsEligible: boolean
-			address: {
-				streetAddress: string | null
-				locality: string | null
-				region: string | null
-				postalCode: string | null
-				country: string | null
-			} | null
+			// address: {
+			// 	streetAddress: string | null
+			// 	locality: string | null
+			// 	region: string | null
+			// 	postalCode: string | null
+			// 	country: string | null
+			// } | null
 		} | null
 	}
 
