@@ -1,6 +1,6 @@
 import {
 	BoundQuery,
-	type Query,
+	type Query, // Using despite the fact it's not exported, don't worry about it
 	Surreal,
 	RecordId as SurrealRecordId,
 	Table,
