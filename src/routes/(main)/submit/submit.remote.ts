@@ -1,5 +1,5 @@
 import fs from "node:fs"
-import { error, invalid, redirect } from "@sveltejs/kit"
+import { error, invalid, isHttpError, redirect } from "@sveltejs/kit"
 import sharp from "sharp"
 import { makeMessage, type } from "#lib/arktype.js"
 import { authorise } from "#lib/server/auth.js"
@@ -40,7 +40,7 @@ const schema = type({
 	"howHear?": "string",
 	"howDoingWell?": "string",
 	"howImprove?": "string",
-	"howLikelyRecommend?": "1 <= number.integer <= 10",
+	"howLikelyRecommend?": "(1 <= number.integer <= 10) | undefined",
 })
 	.configure(...messageName)
 	.configure(...messageDescription)
@@ -65,6 +65,28 @@ export const newProjectForm = form(
 		timelapseIds,
 	}) => {
 		const { user } = await authorise()
+
+		// Verify the selected timelapses total at least one hour of recorded time. Fetch fresh from Lapse so the check reflects current data.
+		let selectedTimelapses: LapseTimelapse[]
+		try {
+			selectedTimelapses = (await fetchLapseTimelapses(user)).filter(t =>
+				timelapseIds.includes(t.id)
+			)
+		} catch (e) {
+			const message =
+				e instanceof Error
+					? e.message
+					: "Failed to fetch your timelapses. Please try again."
+			invalid(message)
+		}
+		const totalDuration = selectedTimelapses.reduce(
+			(sum, t) => sum + (t.duration ?? 0),
+			0
+		)
+		if (totalDuration < 3600)
+			invalid(
+				"Your selected timelapses must total at least 3600 seconds (1 hour) of recorded time."
+			)
 
 		// Only one project may be submitted per minute, measured from the last successful insert. This check runs before image compression so we don't waste CPU on rate-limited submissions.
 		const [latestCreated] = await db.query<Date[]>(getLatestProjectQuery, {
@@ -145,9 +167,10 @@ export type TimelapsesResult = {
 	timelapses: LapseTimelapse[]
 }
 
-export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
-	const { user } = await authorise()
-
+/**
+ * Fetches the calling user's timelapses from Lapse, filtered to those created since {@link LAPSE_TIMELAPSE_SINCE}. Throws on any failure (including an unlinked or expired Lapse account).
+ */
+async function fetchLapseTimelapses(user: User): Promise<LapseTimelapse[]> {
 	const since = LAPSE_TIMELAPSE_SINCE
 	const sinceMs = Date.parse(since)
 
@@ -159,68 +182,70 @@ export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
 	if (!lapse?.accessToken)
 		error(401, "Please link your lapse account to submit a project!")
 
-	try {
-		const response = await fetch(
-			`https://api.lapse.hackclub.com/api/timelapse/findByUser?user=${encodeURIComponent(lapse.id)}`,
-			{ headers: { Authorization: `Bearer ${lapse.accessToken}` } }
-		)
+	const response = await fetch(
+		`https://api.lapse.hackclub.com/api/timelapse/findByUser?user=${encodeURIComponent(lapse.id)}`,
+		{ headers: { Authorization: `Bearer ${lapse.accessToken}` } }
+	)
 
-		if (!response.ok) {
-			if (response.status === 401)
-				return {
-					error: "Your Lapse session has expired. Please re-link your Lapse account.",
-					since,
-					timelapses: [],
-				}
-
-			return {
-				error: `Failed to fetch timelapses from Lapse (status ${response.status}).`,
-				since,
-				timelapses: [],
-			}
-		}
-
-		const body = await response.json()
-		if (!body?.ok || !body?.data?.timelapses)
-			return {
-				error: `Lapse API returned an error: ${JSON.stringify(body)}`,
-				since,
-				timelapses: [],
-			}
-
-		const timelapses = (body.data.timelapses as LapseTimelapse[])
-			.filter(t => t.createdAt >= sinceMs)
-			.sort((a, b) => b.createdAt - a.createdAt)
-			.map(
-				({
-					id,
-					name,
-					description,
-					visibility,
-					createdAt,
-					duration,
-					thumbnailUrl,
-					playbackUrl,
-				}) => ({
-					id,
-					name,
-					description,
-					visibility,
-					createdAt,
-					duration,
-					thumbnailUrl,
-					playbackUrl,
-				})
+	if (!response.ok) {
+		if (response.status === 401)
+			throw new Error(
+				"Your Lapse session has expired. Please re-link your Lapse account."
 			)
 
+		throw new Error(
+			`Failed to fetch timelapses from Lapse (status ${response.status}).`
+		)
+	}
+
+	const body = await response.json()
+	if (!body?.ok || !body?.data?.timelapses)
+		throw new Error(`Lapse API returned an error: ${JSON.stringify(body)}`)
+
+	return (body.data.timelapses as LapseTimelapse[])
+		.filter(t => t.createdAt >= sinceMs)
+		.sort((a, b) => b.createdAt - a.createdAt)
+		.map(
+			({
+				id,
+				name,
+				description,
+				visibility,
+				createdAt,
+				duration,
+				thumbnailUrl,
+				playbackUrl,
+			}) => ({
+				id,
+				name,
+				description,
+				visibility,
+				createdAt,
+				duration,
+				thumbnailUrl,
+				playbackUrl,
+			})
+		)
+}
+
+export const getTimelapses = query(async (): Promise<TimelapsesResult> => {
+	const { user } = await authorise()
+
+	const since = LAPSE_TIMELAPSE_SINCE
+
+	try {
+		const timelapses = await fetchLapseTimelapses(user)
 		return { error: null, since, timelapses }
 	} catch (e) {
+		// An unlinked account throws an HttpError; let it surface as a 401.
+		if (isHttpError(e)) throw e
+
+		const message =
+			e instanceof Error
+				? e.message
+				: "Failed to fetch timelapses from Lapse. Please try again."
 		console.error("Failed to fetch Lapse timelapses:", e)
 
-		return {
-			error: "Failed to fetch timelapses from Lapse. Please try again.",
-			since,
-			timelapses: [],
-		}
+		return { error: message, since, timelapses: [] }
 	}
 })
