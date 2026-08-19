@@ -18,6 +18,22 @@ const schema = type({
 	"reviewerNotes?": "string",
 	timelapseIds: "string[] >= 1",
 })
+	.configure(
+		{ message: () => "Please give your project a name." },
+		n => n.kind === "required" && n.expression.startsWith("name:")
+	)
+	.configure(
+		{ message: () => "Please add a description of your project." },
+		n => n.kind === "required" && n.expression.startsWith("description:")
+	)
+	.configure(
+		{ message: () => "Please provide a URL to your project's code." },
+		n => n.kind === "required" && n.expression.startsWith("codeUrl:")
+	)
+	.configure(
+		{ message: () => "Please select at least one timelapse." },
+		n => n.kind === "required" && n.expression.startsWith("timelapseIds:")
+	)
 
 export const newProjectForm = form(
 	schema,
