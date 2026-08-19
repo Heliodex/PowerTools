@@ -52,9 +52,7 @@ function pathnameColour(pathname: string) {
 const time = () => gray(new Date().toLocaleString())
 
 const userLog = (user: User | null) =>
-	user
-		? blue(user.email) + " ".repeat(21 - user.email.length)
-		: yellow("Logged-out user      ")
+	user ? blue(user.email) : yellow("Logged-out user      ")
 
 const finish: Handle = async ({ event, resolve }) => {
 	const { pathname, search } = event.url
