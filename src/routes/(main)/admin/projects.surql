@@ -4,10 +4,11 @@ SELECT
 	name,
 	description,
 	codeUrl,
+	playableUrl,
 	ai,
 	reviewerNotes,
 	lapseTimelapses,
 	image,
-	(SELECT VALUE email FROM $parent<-createdProject<-user)[0] AS submitterEmail
+	SELECT VALUE email FROM ONLY $parent<-createdProject<-user AS submitterEmail
 FROM project
 ORDER BY created DESC;

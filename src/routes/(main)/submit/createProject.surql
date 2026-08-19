@@ -3,6 +3,7 @@ LET $project = CREATE ONLY project CONTENT {
 	name: $name,
 	description: $description,
 	codeUrl: $codeUrl,
+	playableUrl: $playableUrl,
 	ai: $ai,
 	reviewerNotes: $reviewerNotes,
 	lapseTimelapses: $timelapseIds

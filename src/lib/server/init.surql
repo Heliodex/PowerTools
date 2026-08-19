@@ -17,10 +17,11 @@ DEFINE TABLE OVERWRITE project SCHEMAFULL TYPE NORMAL;
 		DEFINE FIELD OVERWRITE image.updated ON project TYPE datetime DEFAULT ALWAYS time::now();
 	DEFINE FIELD OVERWRITE name ON project TYPE string;
 	DEFINE FIELD OVERWRITE description ON project TYPE string;
-	DEFINE FIELD OVERWRITE codeUrl ON project TYPE option<string>;
+	DEFINE FIELD OVERWRITE codeUrl ON project TYPE string;
+	DEFINE FIELD OVERWRITE playableUrl ON project TYPE string;
 	DEFINE FIELD OVERWRITE ai ON project TYPE bool;
 	DEFINE FIELD OVERWRITE reviewerNotes ON project TYPE option<string>;
-	DEFINE FIELD OVERWRITE lapseTimelapses ON project TYPE option<array<string>>;
+	DEFINE FIELD OVERWRITE lapseTimelapses ON project TYPE array<string>;
 
 DEFINE TABLE OVERWRITE session SCHEMAFULL TYPE NORMAL;
 	DEFINE FIELD OVERWRITE id ON session TYPE string;

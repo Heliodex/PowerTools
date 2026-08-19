@@ -9,10 +9,11 @@ type AdminProject = {
 	created: Date
 	name: string
 	description: string
-	codeUrl?: string
+	codeUrl: string
+	playableUrl: string
 	ai: boolean
 	reviewerNotes?: string
-	lapseTimelapses?: string[]
+	lapseTimelapses: string[]
 	image?: { hash: string; updated: Date }
 	submitterEmail?: string
 }

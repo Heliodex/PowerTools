@@ -15,6 +15,7 @@ const schema = type({
 	name: "string >= 1",
 	description: "string >= 1",
 	codeUrl: "string >= 1",
+	playableUrl: "string >= 1",
 	"ai?": "boolean",
 	"reviewerNotes?": "string",
 	timelapseIds: "string[] >= 1",
@@ -32,6 +33,10 @@ const schema = type({
 		n => n.kind === "required" && n.expression.startsWith("codeUrl:")
 	)
 	.configure(
+		{ message: () => "please provide a URL to your project's playable version." },
+		n => n.kind === "required" && n.expression.startsWith("playableUrl:")
+	)
+	.configure(
 		{ message: () => "please select at least one timelapse." },
 		n => n.kind === "required" && n.expression.startsWith("timelapseIds:")
 	)
@@ -43,6 +48,7 @@ export const newProjectForm = form(
 		name,
 		description,
 		codeUrl,
+		playableUrl,
 		ai,
 		reviewerNotes,
 		timelapseIds,
@@ -89,6 +95,7 @@ export const newProjectForm = form(
 			name,
 			description,
 			codeUrl,
+			playableUrl,
 			ai: ai ?? false,
 			reviewerNotes,
 			timelapseIds,
