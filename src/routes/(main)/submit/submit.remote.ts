@@ -5,7 +5,7 @@ import { type } from "#lib/arktype.js"
 import { authorise } from "#lib/server/auth.js"
 import { db, type RecordId } from "#lib/server/db.js"
 import { LAPSE_TIMELAPSE_SINCE } from "$app/env/private"
-import { form, query } from "$app/server"
+import { form, getRequestEvent, query } from "$app/server"
 import createProjectQuery from "./createProject.surql?raw"
 import getLapseDataQuery from "./getLapseData.surql?raw"
 
@@ -89,6 +89,9 @@ export const newProjectForm = form(
 		)
 
 		console.log("created", project)
+
+		const { cookies } = getRequestEvent()
+		cookies.set("submitted", "true", { path: "/" })
 
 		redirect(303, "/submitted")
 	}
