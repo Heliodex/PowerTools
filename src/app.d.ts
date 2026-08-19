@@ -9,8 +9,10 @@ declare global {
 		id: RecordId<"user">
 		email: string
 		extraInfo: {
-			firstName: string
-			lastName: string
+			name: string
+			givenName: string
+			familyName: string
+			nickname: string
 			emailVerified: boolean
 			// HQ-official only (phone, birthdate, address scopes):
 			// phoneNumber: string

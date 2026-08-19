@@ -39,8 +39,10 @@ DEFINE TABLE OVERWRITE user SCHEMAFULL TYPE NORMAL;
 	DEFINE FIELD OVERWRITE email ON user TYPE string
 		ASSERT string::is_email($value);
 	DEFINE FIELD OVERWRITE extraInfo ON user TYPE option<object>;
-		DEFINE FIELD OVERWRITE extraInfo.firstName ON user TYPE string;
-		DEFINE FIELD OVERWRITE extraInfo.lastName ON user TYPE string;
+		DEFINE FIELD OVERWRITE extraInfo.name ON user TYPE string;
+		DEFINE FIELD OVERWRITE extraInfo.givenName ON user TYPE string;
+		DEFINE FIELD OVERWRITE extraInfo.familyName ON user TYPE string;
+		DEFINE FIELD OVERWRITE extraInfo.nickname ON user TYPE string;
 		DEFINE FIELD OVERWRITE extraInfo.emailVerified ON user TYPE bool;
 		# HQ-official only (phone, birthdate, address scopes):
 		# DEFINE FIELD OVERWRITE extraInfo.phoneNumber ON user TYPE string;

@@ -117,30 +117,27 @@ type HackClubTokenResponse = {
 }
 
 type HackClubUserInfo = {
-	identity: {
-		id: string
-		primary_email: string
-		first_name?: string
-		last_name?: string
-		email_verified?: boolean
-		// HQ-official only (phone, birthdate, address scopes):
-		// phone_number?: string
-		// phone_number_verified?: boolean
-		// birthday?: string
-		slack_id?: string
-		verification_status?: string
-		ysws_eligible?: boolean
-		// addresses?: {
-		// 	line_1?: string
-		// 	line_2?: string
-		// 	city?: string
-		// 	state?: string
-		// 	postal_code?: string
-		// 	country?: string
-		// 	primary?: boolean
-		// }[]
-	}
-	scopes: string[]
+	sub: string
+	email: string
+	email_verified?: boolean
+	name?: string
+	given_name?: string
+	family_name?: string
+	nickname?: string
+	// HQ-official only (phone, birthdate, address scopes):
+	// phone_number?: string
+	// phone_number_verified?: boolean
+	// birthdate?: string
+	slack_id?: string
+	verification_status?: string
+	ysws_eligible?: boolean
+	// address?: {
+	// 	street_address?: string
+	// 	locality?: string
+	// 	region?: string
+	// 	postal_code?: string
+	// 	country?: string
+	// }
 }
 
 /**
@@ -172,12 +169,12 @@ export async function exchangeCodeForToken(
 }
 
 /**
- * Fetches user info from Hack Club API using the access token
+ * Fetches user info from the Hack Club OIDC userinfo endpoint using the access token
  */
 export async function fetchHackClubUserInfo(
 	accessToken: string
 ): Promise<HackClubUserInfo> {
-	const response = await fetch("https://auth.hackclub.com/api/v1/me", {
+	const response = await fetch("https://auth.hackclub.com/oauth/userinfo", {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
@@ -188,9 +185,7 @@ export async function fetchHackClubUserInfo(
 		throw new Error(`Failed to fetch user info: ${error}`)
 	}
 
-	const r = await response.json()
-	console.log(r)
-	return r
+	return response.json()
 }
 
 /**
@@ -200,43 +195,41 @@ export async function findOrCreateUser(
 	userInfo: HackClubUserInfo
 ): Promise<RecordId<"user">> {
 	const {
-		id,
-		primary_email: email,
-		first_name,
-		last_name,
+		sub,
+		email,
+		name,
+		given_name,
+		family_name,
+		nickname,
 		email_verified,
 		// HQ-official only (phone, birthdate, address scopes):
 		// phone_number,
 		// phone_number_verified,
-		// birthday,
+		// birthdate,
 		slack_id,
 		verification_status,
 		ysws_eligible,
-		// addresses,
-	} = userInfo.identity
-
-	// HQ-official only:
-	// const address = addresses?.find(a => a.primary) ?? addresses?.[0]
+		// address,
+	} = userInfo
 
 	const extraInfo = {
-		firstName: first_name ?? "",
-		lastName: last_name ?? "",
+		name: name ?? "",
+		givenName: given_name ?? "",
+		familyName: family_name ?? "",
+		nickname: nickname ?? "",
 		emailVerified: email_verified ?? false,
 		// HQ-official only:
 		// phoneNumber: phone_number ?? "",
 		// phoneNumberVerified: phone_number_verified ?? false,
-		// birthdate: birthday ?? "",
+		// birthdate: birthdate ?? "",
 		slackId: slack_id ?? "",
 		verificationStatus: verification_status ?? "",
 		yswsEligible: ysws_eligible ?? false,
 		// address: address
 		// 	? {
-		// 			streetAddress:
-		// 				[address.line_1, address.line_2]
-		// 					.filter(Boolean)
-		// 					.join(", ") || null,
-		// 			locality: address.city ?? null,
-		// 			region: address.state ?? null,
+		// 			streetAddress: address.street_address ?? null,
+		// 			locality: address.locality ?? null,
+		// 			region: address.region ?? null,
 		// 			postalCode: address.postal_code ?? null,
 		// 			country: address.country ?? null,
 		// 		}
@@ -246,7 +239,7 @@ export async function findOrCreateUser(
 	const [, userId] = await db.query<RecordId<"user">[]>(
 		findOrCreateUserQuery,
 		{
-			hcid: id,
+			hcid: sub,
 			email,
 			extraInfo,
 		}

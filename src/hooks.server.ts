@@ -102,7 +102,6 @@ export const handle: Handle = async e => {
 	event.locals.user = user
 	event.cookies.set(cookieName, session, cookieOptions)
 
-
 	return await finish(e)
 }
 
