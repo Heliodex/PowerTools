@@ -40,10 +40,10 @@
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
 				{#each timelapseData.timelapses as t (t.id)}
 					<label
-						class="relative flex cursor-pointer flex-col overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 p-2 transition-colors hover:border-blue-500 has-checked:border-blue-500">
+						class="relative flex cursor-pointer flex-col overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 p-2 transition-colors hover:border-yellow-600 has-checked:border-yellow-400">
 						<input
 							{...newProjectForm.fields.timelapseIds.as("checkbox", t.id)}
-							class="absolute top-2 left-2 z-10 size-5 accent-blue-500" />
+							class="absolute top-2 left-2 z-10 size-5 accent-yellow-400" />
 						{#if t.thumbnailUrl}
 							<img
 								src={t.thumbnailUrl}
