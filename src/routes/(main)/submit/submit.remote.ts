@@ -11,27 +11,27 @@ import getLapseDataQuery from "./getLapseData.surql?raw"
 
 const schema = type({
 	"image?": type("Blob").as<File>(),
-	name: "string",
-	description: "string",
-	codeUrl: "string",
+	name: "string >= 1",
+	description: "string >= 1",
+	codeUrl: "string >= 1",
 	"ai?": "boolean",
 	"reviewerNotes?": "string",
 	timelapseIds: "string[] >= 1",
 })
 	.configure(
-		{ message: () => "Please give your project a name." },
+		{ message: () => "please give your project a name." },
 		n => n.kind === "required" && n.expression.startsWith("name:")
 	)
 	.configure(
-		{ message: () => "Please add a description of your project." },
+		{ message: () => "please add a description of your project." },
 		n => n.kind === "required" && n.expression.startsWith("description:")
 	)
 	.configure(
-		{ message: () => "Please provide a URL to your project's code." },
+		{ message: () => "please provide a URL to your project's code." },
 		n => n.kind === "required" && n.expression.startsWith("codeUrl:")
 	)
 	.configure(
-		{ message: () => "Please select at least one timelapse." },
+		{ message: () => "please select at least one timelapse." },
 		n => n.kind === "required" && n.expression.startsWith("timelapseIds:")
 	)
 
