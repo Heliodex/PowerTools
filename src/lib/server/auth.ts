@@ -1,3 +1,4 @@
+import type { Cookies } from "@sveltejs/kit"
 import { redirect } from "@sveltejs/kit"
 import { db, Record, type RecordId } from "#lib/server/db.js"
 import deleteExpiredSessionsQuery from "#lib/server/deleteExpiredSessions.surql?raw"
@@ -87,6 +88,23 @@ export function getHackClubAuthUrl(state: string): string {
 		state,
 	})
 	return `https://auth.hackclub.com/oauth/authorize?${params.toString()}`
+}
+
+/**
+ * Starts the Hack Club OAuth flow: stores a CSRF state cookie and redirects the
+ * user to the Hack Club authorization URL.
+ */
+export function startHackClubAuth(cookies: Cookies): never {
+	const state = crypto.randomUUID()
+
+	cookies.set("hca_state", state, {
+		httpOnly: true,
+		maxAge: 60 * 10, // 10 minutes
+		sameSite: "lax",
+		secure: !dev,
+	})
+
+	redirect(302, getHackClubAuthUrl(state), { external: true })
 }
 
 type HackClubTokenResponse = {
@@ -196,35 +214,37 @@ export async function findOrCreateUser(
 
 	const address = addresses?.find(a => a.primary) ?? addresses?.[0]
 
-	const userData = {
-		hcid: id,
-		email,
-		firstName: first_name,
-		lastName: last_name,
-		emailVerified: email_verified,
-		phoneNumber: phone_number,
-		phoneNumberVerified: phone_number_verified,
-		birthdate: birthday,
-		slackId: slack_id,
-		verificationStatus: verification_status,
-		yswsEligible: ysws_eligible,
+	const extraInfo = {
+		firstName: first_name ?? "",
+		lastName: last_name ?? "",
+		emailVerified: email_verified ?? false,
+		phoneNumber: phone_number ?? "",
+		phoneNumberVerified: phone_number_verified ?? false,
+		birthdate: birthday ?? "",
+		slackId: slack_id ?? "",
+		verificationStatus: verification_status ?? "",
+		yswsEligible: ysws_eligible ?? false,
 		address: address
 			? {
 					streetAddress:
 						[address.line_1, address.line_2]
 							.filter(Boolean)
-							.join(", ") || undefined,
-					locality: address.city,
-					region: address.state,
-					postalCode: address.postal_code,
-					country: address.country,
+							.join(", ") || null,
+					locality: address.city ?? null,
+					region: address.state ?? null,
+					postalCode: address.postal_code ?? null,
+					country: address.country ?? null,
 				}
-			: undefined,
+			: null,
 	}
 
 	const [, userId] = await db.query<RecordId<"user">[]>(
 		findOrCreateUserQuery,
-		userData
+		{
+			hcid: id,
+			email,
+			extraInfo,
+		}
 	)
 
 	return userId

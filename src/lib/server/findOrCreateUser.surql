@@ -1,23 +1,12 @@
 LET $u = SELECT VALUE id FROM user WHERE email = $email;
 
-LET $extraInfo = {
-	firstName: $firstName,
-	lastName: $lastName,
-	emailVerified: $emailVerified,
-	phoneNumber: $phoneNumber,
-	phoneNumberVerified: $phoneNumberVerified,
-	birthdate: $birthdate,
-	slackId: $slackId,
-	verificationStatus: $verificationStatus,
-	yswsEligible: $yswsEligible,
-	address: $address
-}
-
 IF $u {
-	UPDATE $u MERGE $extraInfo;
+	UPDATE $u SET extraInfo = $extraInfo;
+	$u;
 } ELSE {
-	CREATE ONLY user CONTENT object::extend({
+	CREATE ONLY user CONTENT {
 		id: $hcid,
-		email: $email
-	}, $extraInfo) RETURN VALUE id;
-}
+		email: $email,
+		extraInfo: $extraInfo
+	} RETURN VALUE id;
+};

@@ -8,21 +8,23 @@ declare global {
 	declare type User = {
 		id: RecordId<"user">
 		email: string
-		firstName: string | null
-		lastName: string | null
-		emailVerified: boolean | null
-		phoneNumber: string | null
-		phoneNumberVerified: boolean | null
-		birthdate: string | null
-		slackId: string | null
-		verificationStatus: string | null
-		yswsEligible: boolean | null
-		address: {
-			streetAddress: string | null
-			locality: string | null
-			region: string | null
-			postalCode: string | null
-			country: string | null
+		extraInfo: {
+			firstName: string
+			lastName: string
+			emailVerified: boolean
+			phoneNumber: string
+			phoneNumberVerified: boolean
+			birthdate: string
+			slackId: string
+			verificationStatus: string
+			yswsEligible: boolean
+			address: {
+				streetAddress: string | null
+				locality: string | null
+				region: string | null
+				postalCode: string | null
+				country: string | null
+			} | null
 		} | null
 	}
 
