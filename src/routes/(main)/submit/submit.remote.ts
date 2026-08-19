@@ -30,13 +30,13 @@ const messageTimelapseIds = makeMessage(
 
 const schema = type({
 	"image?": type("Blob").as<File>(),
-	name: type("string >= 1").configure(...messageName),
-	description: type("string >= 1").configure(...messageDescription),
-	codeUrl: type("string >= 1").configure(...messageCodeUrl),
-	playableUrl: type("string >= 1").configure(...messagePlayableUrl),
+	name: type("string >= 1").configure(messageName[0]),
+	description: type("string >= 1").configure(messageDescription[0]),
+	codeUrl: type("string >= 1").configure(messageCodeUrl[0]),
+	playableUrl: type("string >= 1").configure(messagePlayableUrl[0]),
 	"ai?": "boolean",
 	"reviewerNotes?": "string",
-	timelapseIds: type("string[] >= 1").configure(...messageTimelapseIds),
+	timelapseIds: type("string[] >= 1").configure(messageTimelapseIds[0]),
 	"howHear?": "string",
 	"howDoingWell?": "string",
 	"howImprove?": "string",
