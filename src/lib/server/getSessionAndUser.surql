@@ -1,7 +1,17 @@
 LET $s = SELECT id, expires FROM ONLY $sess;
 LET $u = (SELECT
     id,
-	email
+	email,
+	firstName,
+	lastName,
+	emailVerified,
+	phoneNumber,
+	phoneNumberVerified,
+	birthdate,
+	slackId,
+	verificationStatus,
+	yswsEligible,
+	address
 FROM $sess<-hasSession<-user)[0];
 
 IF $s {

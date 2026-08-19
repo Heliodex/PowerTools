@@ -83,7 +83,7 @@ export function getHackClubAuthUrl(state: string): string {
 		client_id: HACKCLUB_CLIENT_ID,
 		redirect_uri: HACKCLUB_REDIRECT_URI,
 		response_type: "code",
-		scope: "openid profile email",
+		scope: "openid profile email phone address birthdate slack_id verification_status",
 		state,
 	})
 	return `https://auth.hackclub.com/oauth/authorize?${params.toString()}`
@@ -101,6 +101,24 @@ type HackClubUserInfo = {
 	identity: {
 		id: string
 		primary_email: string
+		first_name?: string
+		last_name?: string
+		email_verified?: boolean
+		phone_number?: string
+		phone_number_verified?: boolean
+		birthday?: string
+		slack_id?: string
+		verification_status?: string
+		ysws_eligible?: boolean
+		addresses?: {
+			line_1?: string
+			line_2?: string
+			city?: string
+			state?: string
+			postal_code?: string
+			country?: string
+			primary?: boolean
+		}[]
 	}
 	scopes: string[]
 }
@@ -161,12 +179,52 @@ export async function fetchHackClubUserInfo(
 export async function findOrCreateUser(
 	userInfo: HackClubUserInfo
 ): Promise<RecordId<"user">> {
+	const {
+		id,
+		primary_email: email,
+		first_name,
+		last_name,
+		email_verified,
+		phone_number,
+		phone_number_verified,
+		birthday,
+		slack_id,
+		verification_status,
+		ysws_eligible,
+		addresses,
+	} = userInfo.identity
+
+	const address = addresses?.find(a => a.primary) ?? addresses?.[0]
+
+	const userData = {
+		hcid: id,
+		email,
+		firstName: first_name,
+		lastName: last_name,
+		emailVerified: email_verified,
+		phoneNumber: phone_number,
+		phoneNumberVerified: phone_number_verified,
+		birthdate: birthday,
+		slackId: slack_id,
+		verificationStatus: verification_status,
+		yswsEligible: ysws_eligible,
+		address: address
+			? {
+					streetAddress:
+						[address.line_1, address.line_2]
+							.filter(Boolean)
+							.join(", ") || undefined,
+					locality: address.city,
+					region: address.state,
+					postalCode: address.postal_code,
+					country: address.country,
+				}
+			: undefined,
+	}
+
 	const [, userId] = await db.query<RecordId<"user">[]>(
 		findOrCreateUserQuery,
-		{
-			hcid: userInfo.identity.id,
-			email: userInfo.identity.primary_email,
-		}
+		userData
 	)
 
 	return userId
