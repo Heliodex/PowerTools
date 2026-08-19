@@ -90,7 +90,7 @@ export const newProjectForm = form(
 
 		console.log("created", project)
 
-		redirect(303, "/home")
+		redirect(303, "/submitted")
 	}
 )
 

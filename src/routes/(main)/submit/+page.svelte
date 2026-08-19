@@ -138,9 +138,9 @@
 	{/if}
 
 	<button
-		disabled={!!timelapseData.error}
+		disabled={!!timelapseData.error || newProjectForm.pending > 0}
 		type="submit"
-		class="btn bg-blue-500 hover:bg-blue-600 active:bg-blue-400 font-bold">
-		Submit
+		class="btn bg-blue-500 hover:bg-blue-600 active:bg-blue-400 font-bold {newProjectForm.pending > 0 ? 'bg-neutral-600 hover:bg-neutral-600 active:bg-neutral-600 opacity-60' : ''}">
+		{newProjectForm.pending > 0 ? "Submitting..." : "Submit"}
 	</button>
 </form>
