@@ -1,6 +1,7 @@
 <script lang="ts">
-	let { data } = $props()
-	const projects = $derived(data.projects)
+	import { getProjects } from "./admin.remote"
+
+	let projects = $derived(await getProjects())
 </script>
 
 <h1>All submitted projects</h1>
@@ -8,33 +9,87 @@
 {#if projects.length === 0}
 	<p class="pt-4">No projects have been submitted yet.</p>
 {:else}
-	<ul class="flex flex-col gap-4 pt-4">
-		{#each projects as project (project.id)}
-			<li class="border border-neutral-600 rounded-lg p-4 flex flex-col gap-1">
-				<h3 class="pb-0!">{project.name}</h3>
+	<div class="relative left-1/2 w-screen -translate-x-1/2 overflow-x-clip">
+		<div class="overflow-x-auto px-4 sm:px-6">
+			<table class="w-full min-w-250 border-collapse text-sm">
+				<thead>
+					<tr class="text-left text-neutral-400">
+						<th class="border-b border-neutral-600 p-3">Project</th>
+						<th class="border-b border-neutral-600 p-3">Submitter</th>
+						<th class="border-b border-neutral-600 p-3">AI used</th>
+						<th class="border-b border-neutral-600 p-3">Image</th>
+						<th class="border-b border-neutral-600 p-3">Lapse timelapse IDs</th>
+						<th class="border-b border-neutral-600 p-3">Code URL</th>
+						<th class="border-b border-neutral-600 p-3">Reviewer notes</th>
+						<th class="border-b border-neutral-600 p-3">Submitted</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each projects as project (project.id)}
+						<tr class="align-top">
+							<td class="border-b border-neutral-700 p-3">
+								<h3 class="text-lg! pb-0! font-semibold text-yellow-300">
+									{project.name}
+								</h3>
+								<p class="pt-1 text-neutral-300">{project.description}</p>
+							</td>
 
-				{#if project.submitterEmail}
-					<p class="text-neutral-300">Submitted by {project.submitterEmail}</p>
-				{/if}
+							<td class="border-b border-neutral-700 p-3">
+								{project.submitterEmail ?? "—"}
+							</td>
 
-				<p>AI used: {project.ai ? "Yes" : "No"}</p>
+							<td class="border-b border-neutral-700 p-3">
+								{project.ai ? "Yes" : "No"}
+							</td>
 
-				{#if project.codeUrl}
-					<a href={project.codeUrl} target="_blank" rel="noreferrer">
-						{project.codeUrl}
-					</a>
-				{/if}
+							<td class="border-b border-neutral-700 p-3">
+								{#if project.image}
+									<img
+										src="/admin/images/{project.id.split(":").at(-1)}"
+										alt="{project.name} project image"
+										class="aspect-video w-48 rounded object-cover" />
+								{:else}
+									—
+								{/if}
+							</td>
 
-				<p>{project.description}</p>
+							<td class="border-b border-neutral-700 p-3">
+								{#if project.lapseTimelapses?.length}
+									<ul class="flex flex-col gap-1">
+										{#each project.lapseTimelapses as id}
+											<li class="font-mono text-xs break-all">
+												<a href="https://lapse.hackclub.com/timelapse/{id}" target="_blank" rel="noreferrer">{id}</a>
+											</li>
+										{/each}
+									</ul>
+								{:else}
+									—
+								{/if}
+							</td>
 
-				{#if project.reviewerNotes}
-					<p>Reviewer notes: {project.reviewerNotes}</p>
-				{/if}
+							<td class="border-b border-neutral-700 p-3">
+								{#if project.codeUrl}
+									<a
+										href={project.codeUrl}
+										target="_blank"
+										rel="noreferrer"
+										class="break-all">{project.codeUrl}</a>
+								{:else}
+									—
+								{/if}
+							</td>
 
-				<p class="text-neutral-500 text-sm">
-					Submitted {project.submittedAt}
-				</p>
-			</li>
-		{/each}
-	</ul>
+							<td class="border-b border-neutral-700 p-3 text-neutral-300">
+								{project.reviewerNotes ?? "—"}
+							</td>
+
+							<td class="border-b border-neutral-700 p-3 whitespace-nowrap text-neutral-400">
+								{project.submittedAt}
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	</div>
 {/if}

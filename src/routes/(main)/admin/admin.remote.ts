@@ -1,6 +1,7 @@
 import { redirect } from "@sveltejs/kit"
 import { isAdmin } from "#lib/server/admin.js"
 import { db, type RecordId } from "#lib/server/db.js"
+import { getRequestEvent, query } from "$app/server"
 import projectsQuery from "./projects.surql?raw"
 
 type AdminProject = {
@@ -11,22 +12,20 @@ type AdminProject = {
 	codeUrl?: string
 	ai: boolean
 	reviewerNotes?: string
+	lapseTimelapses?: string[]
 	image?: { hash: string; updated: Date }
 	submitterEmail?: string
 }
 
-export async function load({ locals }) {
-	if (!isAdmin(locals.user)) redirect(302, "/")
+export const getProjects = query(async () => {
+	const { user } = getRequestEvent().locals
+	if (!isAdmin(user)) redirect(302, "/")
 
 	const [projects] = await db.query<AdminProject[][]>(projectsQuery)
 
-	return {
-		projects: projects.map(project => ({
-			...project,
-			// SurrealDB record ids are class instances, which can't be serialized to the client, so reduce them to their string form
-			id: project.id.toString(),
-			// Format server-side so SSR and hydated markup match
-			submittedAt: new Date(project.created).toLocaleString(),
-		})),
-	}
-}
+	return projects.map(project => ({
+		...project,
+		// Format server-side so SSR and hydrated markup match
+		submittedAt: new Date(project.created).toLocaleString(),
+	}))
+})
