@@ -45,7 +45,7 @@
 							<td class="border-b border-neutral-700 p-3">
 								{#if project.image}
 									<img
-										src="/admin/images/{project.id.split(":").at(-1)}"
+										src="/admin/images/{project.id}"
 										alt="{project.name} project image"
 										class="aspect-video w-48 rounded object-cover" />
 								{:else}

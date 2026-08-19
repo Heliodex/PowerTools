@@ -1,11 +1,11 @@
 import { redirect } from "@sveltejs/kit"
 import { isAdmin } from "#lib/server/admin.js"
-import { db, type RecordId } from "#lib/server/db.js"
+import { db } from "#lib/server/db.js"
 import { getRequestEvent, query } from "$app/server"
 import projectsQuery from "./projects.surql?raw"
 
 type AdminProject = {
-	id: RecordId<"project">
+	id: string
 	created: Date
 	name: string
 	description: string
