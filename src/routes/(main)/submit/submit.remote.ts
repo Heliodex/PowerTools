@@ -1,5 +1,5 @@
 import fs from "node:fs"
-import { error, redirect } from "@sveltejs/kit"
+import { error, invalid, redirect } from "@sveltejs/kit"
 import sharp from "sharp"
 import { type } from "#lib/arktype.js"
 import { authorise } from "#lib/server/auth.js"
@@ -8,6 +8,7 @@ import { LAPSE_TIMELAPSE_SINCE } from "$app/env/private"
 import { form, getRequestEvent, query } from "$app/server"
 import createProjectQuery from "./createProject.surql?raw"
 import getLapseDataQuery from "./getLapseData.surql?raw"
+import getLatestProjectQuery from "./getLatestProject.surql?raw"
 
 const schema = type({
 	"image?": type("Blob").as<File>(),
@@ -47,6 +48,15 @@ export const newProjectForm = form(
 		timelapseIds,
 	}) => {
 		const { user } = await authorise()
+
+		// Only one project may be submitted per minute, measured from the last successful insert. This check runs before image compression so we don't waste CPU on rate-limited submissions.
+		const [latestCreated] = await db.query<Date[]>(getLatestProjectQuery, {
+			user,
+		})
+		if (latestCreated && Date.now() - latestCreated.getTime() < 60_000)
+			invalid(
+				"You've already submitted a project recently. Please wait a minute before submitting again."
+			)
 
 		// Process the uploaded image (if any) into a fixed-size AVIF, then content-address it by its SHA-256 hash so identical uploads share a single file on disk. The hash is stored on the project and used to serve the image later.
 		let imageHash: string | undefined
