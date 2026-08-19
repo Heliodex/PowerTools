@@ -48,8 +48,27 @@ export const newProjectForm = form(
 	}) => {
 		const { user } = await authorise()
 
+		// Process the uploaded image (if any) into a fixed-size AVIF, then content-address it by its SHA-256 hash so identical uploads share a single file on disk. The hash is stored on the project and used to serve the image later.
+		const img = image as Blob | undefined
+		let imageHash: string | undefined
+		if (img && img.size > 0) {
+			await fs.promises.mkdir("./data/images", { recursive: true })
+
+			const bytes = await sharp(await img.arrayBuffer())
+				// size subject to change
+				.resize(1280, 720, { fit: "cover" })
+				.avif({ effort: 9 })
+				.toBuffer()
+
+			imageHash = new Bun.CryptoHasher("sha256").update(bytes).digest("hex")
+
+			const filePath = `./data/images/${imageHash}.avif`
+			if (!fs.existsSync(filePath)) await fs.promises.writeFile(filePath, bytes)
+		}
+
 		const submit = {
 			user,
+			image: imageHash ? { hash: imageHash } : undefined,
 			name,
 			description,
 			codeUrl,
@@ -58,26 +77,12 @@ export const newProjectForm = form(
 			timelapseIds,
 		}
 
-		console.log(submit)
-
-		if (!fs.existsSync("./data/images"))
-			fs.mkdirSync("./data/images", { recursive: true })
-
 		const [, project] = await db.query<RecordId<"project">[]>(
 			createProjectQuery,
 			submit
 		)
 
 		console.log("created", project)
-
-		const img = image as Blob | undefined
-		if (!img || img.size <= 0) redirect(303, "/home")
-
-		await sharp(await img.arrayBuffer())
-			// size subject to change
-			.resize(1280, 720, { fit: "cover" })
-			.avif({ effort: 9 })
-			.toFile(`./data/images/${project.id}.avif`)
 
 		redirect(303, "/home")
 	}

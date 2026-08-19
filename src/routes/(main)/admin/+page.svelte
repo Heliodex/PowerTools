@@ -43,10 +43,10 @@
 							</td>
 
 							<td class="border-b border-neutral-700 p-3">
-								{#if project.image}
+								{#if project.image?.hash}
 									<img
-										src="/admin/images/{project.id}"
-										alt="{project.name} project image"
+										src={`/admin/images/${project.image.hash}`}
+										alt={`${project.name} project image`}
 										class="aspect-video w-48 rounded object-cover" />
 								{:else}
 									—

@@ -1,4 +1,5 @@
 LET $project = CREATE ONLY project CONTENT {
+	image: $image,
 	name: $name,
 	description: $description,
 	codeUrl: $codeUrl,
@@ -10,7 +11,3 @@ LET $project = CREATE ONLY project CONTENT {
 $project;
 
 RELATE $user->createdProject->$project;
-
-IF $imageUpdated {
-	UPDATE $project SET imageUpdated = time::now();
-};
