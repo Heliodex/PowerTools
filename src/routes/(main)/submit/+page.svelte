@@ -42,10 +42,7 @@
 					<label
 						class="relative flex cursor-pointer flex-col overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 p-2 transition-colors hover:border-blue-500 has-checked:border-blue-500">
 						<input
-							type="checkbox"
-							name="timelapseIds[]"
-							value={t.id}
-							bind:group={selected}
+							{...newProjectForm.fields.timelapseIds.as("checkbox", t.id)}
 							class="absolute top-2 left-2 z-10 size-5 accent-blue-500" />
 						{#if t.thumbnailUrl}
 							<img
@@ -71,22 +68,34 @@
 					? "No timelapses selected."
 					: `${selected.length} timelapse${selected.length === 1 ? "" : "s"} selected.`}
 			</p>
+			{#each newProjectForm.fields.timelapseIds.issues() ?? [] as issue}
+				<p class="pt-2 text-sm text-red-500">{issue.message}</p>
+			{/each}
 		</fieldset>
 	{/if}
 
 	<label>
 		<span>Project image</span>
 		<input {...newProjectForm.fields.image.as("file")} />
+		{#each newProjectForm.fields.image.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
 	</label>
 
 	<label>
 		<span>Project name</span>
 		<input {...newProjectForm.fields.name.as("text")} />
+		{#each newProjectForm.fields.name.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
 	</label>
 
 	<label>
 		<span>Project description</span>
 		<textarea {...newProjectForm.fields.description.as("text")}></textarea>
+		{#each newProjectForm.fields.description.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
 	</label>
 
 	<label>
@@ -94,6 +103,9 @@
 		<input
 			{...newProjectForm.fields.codeUrl.as("url")}
 			placeholder="https://github.com/..." />
+		{#each newProjectForm.fields.codeUrl.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
 	</label>
 
 	<label>
@@ -101,12 +113,29 @@
 			<input {...newProjectForm.fields.ai.as("checkbox")} />
 			I used generative AI in building this project
 		</span>
+		{#each newProjectForm.fields.ai.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
 	</label>
 
 	<label>
 		<span>Extra reviewer notes</span>
 		<textarea {...newProjectForm.fields.reviewerNotes.as("text")}></textarea>
+		{#each newProjectForm.fields.reviewerNotes.issues() ?? [] as issue}
+			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
+		{/each}
 	</label>
+
+	{#if newProjectForm.fields.allIssues()?.length}
+		<div class="mb-6" role="alert">
+			<p class="font-bold text-red-500">Please fix the following issues:</p>
+			<ul class="list-disc pl-6 text-sm text-red-500">
+				{#each newProjectForm.fields.allIssues() ?? [] as issue}
+					<li>{issue.message}</li>
+				{/each}
+			</ul>
+		</div>
+	{/if}
 
 	<button
 		disabled={!!timelapseData.error}

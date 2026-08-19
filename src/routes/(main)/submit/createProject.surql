@@ -2,7 +2,6 @@ LET $project = CREATE ONLY project CONTENT {
 	name: $name,
 	description: $description,
 	codeUrl: $codeUrl,
-	projectType: $projectType,
 	ai: $ai,
 	reviewerNotes: $reviewerNotes,
 	lapseTimelapses: $timelapseIds

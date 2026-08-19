@@ -64,17 +64,16 @@ form label {
 		@apply pb-2;
 	}
 
-	/* apply to span next to required inputs */
-	&:has(input[required]) span::after,
-	&:has(select[required]) span::after,
-	&:has(textarea[required]) span::after {
+	/* Only annotate the label's own field, not nested/composite labels. */
+	&:has(> input[required], > select[required], > textarea[required])
+		> span:first-child::after {
 		content: "*";
 		@apply text-red-500;
 	}
-	&:not(:has(input[required])):not(:has(select[required])):not(
-			:has(textarea[required])
+	&:has(> input, > select, > textarea):not(
+			:has(> input[required], > select[required], > textarea[required])
 		)
-		span::after {
+		> span:first-child::after {
 		content: " (optional)";
 		@apply text-sm text-neutral-400;
 	}

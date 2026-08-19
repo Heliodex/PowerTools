@@ -9,15 +9,14 @@ import { form, query } from "$app/server"
 import createProjectQuery from "./createProject.surql?raw"
 import getLapseDataQuery from "./getLapseData.surql?raw"
 
-
 const schema = type({
-	"image?": "File",
+	"image?": type("Blob").as<File>(),
 	name: "string",
 	description: "string",
-	"codeUrl?": "string",
+	codeUrl: "string",
 	"ai?": "boolean",
 	"reviewerNotes?": "string",
-	"timelapseIds?": "string[]",
+	timelapseIds: "string[] >= 1",
 })
 
 export const newProjectForm = form(
@@ -33,30 +32,24 @@ export const newProjectForm = form(
 	}) => {
 		const { user } = await authorise()
 
-		console.log(
-			image,
+		const submit = {
+			user,
 			name,
 			description,
 			codeUrl,
-			ai,
+			ai: ai ?? false,
 			reviewerNotes,
-			timelapseIds
-		)
+			timelapseIds,
+		}
+
+		console.log(submit)
 
 		if (!fs.existsSync("./data/images"))
 			fs.mkdirSync("./data/images", { recursive: true })
 
 		const [, project] = await db.query<RecordId<"project">[]>(
 			createProjectQuery,
-			{
-				user,
-				name,
-				description,
-				codeUrl,
-				ai,
-				reviewerNotes,
-				timelapseIds,
-			}
+			submit
 		)
 
 		console.log("created", project)
