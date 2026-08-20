@@ -26,9 +26,9 @@ const isAdmin = $derived(await getIsAdmin())
 		}),
 		(plausible.init =
 			plausible.init ||
-			function (i) {
+			(i => {
 				plausible.o = i || {}
-			})
+			}))
 	plausible.init()
 	</script>
 </svelte:head>
@@ -59,7 +59,9 @@ const isAdmin = $derived(await getIsAdmin())
 	</nav>
 </header>
 
-<main class="px-4 py-20 max-w-240 mx-auto flex-1">{@render children()}</main>
+<main class="px-4 py-20 max-w-240 w-full mx-auto flex-1 min-w-0">
+	{@render children()}
+</main>
 
 <footer class="bg-stone-950 px-8 py-4 text-center">
 	<p class="pb-4">
