@@ -102,7 +102,7 @@ input[type="file"] {
 }
 
 details:hover:not([open]) {
-	@apply bg-stone-900;
+	@apply bg-stone-800;
 }
 
 input[type="checkbox"] {
