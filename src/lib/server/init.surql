@@ -38,7 +38,7 @@ DEFINE TABLE OVERWRITE user SCHEMAFULL TYPE NORMAL;
 	DEFINE FIELD OVERWRITE created ON user TYPE datetime DEFAULT ALWAYS time::now();
 	DEFINE FIELD OVERWRITE email ON user TYPE string
 		ASSERT string::is_email($value);
-	DEFINE FIELD OVERWRITE extraInfo ON user TYPE option<object>;
+	DEFINE FIELD OVERWRITE extraInfo ON user TYPE object;
 		DEFINE FIELD OVERWRITE extraInfo.name ON user TYPE string;
 		DEFINE FIELD OVERWRITE extraInfo.givenName ON user TYPE string;
 		DEFINE FIELD OVERWRITE extraInfo.familyName ON user TYPE string;

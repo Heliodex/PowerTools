@@ -94,10 +94,6 @@ export const handle: Handle = async e => {
 	const { session, user } = await validateSessionToken(token)
 	if (!session || !user) return await finish(e)
 
-	// Users who signed up before the extra info collection will have a session but no extraInfo. Ask them to re-authenticate (a one-click flow) so the data is backfilled. Skip the auth callback to avoid a redirect loop.
-	if (!user.extraInfo && !event.url.pathname.startsWith("/auth"))
-		startHackClubAuth(event.cookies)
-
 	event.locals.session = session
 	event.locals.user = user
 	event.cookies.set(cookieName, session, cookieOptions)
