@@ -6,8 +6,8 @@ import { getIsAdmin, getLoggedIn, login } from "./data.remote"
 
 let { children } = $props()
 
-const user = $derived(await getLoggedIn())
-const isAdmin = $derived(await getIsAdmin())
+const user = $derived(getLoggedIn())
+const isAdmin = $derived(user.then(u => (u ? getIsAdmin() : false)))
 </script>
 
 <svelte:head>
@@ -36,15 +36,15 @@ const isAdmin = $derived(await getIsAdmin())
 <header class="max-w-280 mx-auto flex">
 	<nav>
 		<ul class="list-none p-0 m-0 flex gap-8 py-6">
-			{#if user}
+			{#if await user}
 				<li><a class="btn" href="/home">Home</a></li>
 			{:else}
 				<li><a class="btn" href="/">Landing</a></li>
 			{/if}
 			<li><a class="btn" href="/guide">Guide</a></li>
-			{#if user}
+			{#if await user}
 				<li><a class="btn" href="/submit">Submit</a></li>
-				{#if isAdmin}
+				{#if await isAdmin}
 					<li><a class="btn" href="/admin">Admin</a></li>
 				{/if}
 			{:else}
