@@ -63,7 +63,8 @@ function formatDuration(seconds: number) {
 							>{t.name}</span
 						>
 						<span class="text-xs opacity-70">
-							{new Date(t.createdAt).toLocaleDateString()} ·
+							{new Date(t.createdAt).toLocaleDateString()}
+							·
 							{formatDuration(t.duration)}
 						</span>
 					</label>
@@ -92,7 +93,8 @@ function formatDuration(seconds: number) {
 			with your tool/framework would be great!
 			<br>
 			We don't need to see the code, you can link it in the
-			<b>Code URL</b> field below.
+			<b>Code URL</b>
+			field below.
 		</p>
 	</label>
 
@@ -196,12 +198,20 @@ function formatDuration(seconds: number) {
 
 	<label>
 		<span>
-			<input {...newProjectForm.fields.ai.as("checkbox")}>I used
-			generative AI in building this project
+			<input {...newProjectForm.fields.ai.as("checkbox")}>
+			<span class="pl-2"
+				>I used generative AI in building this project</span
+			>
 		</span>
 		{#each newProjectForm.fields.ai.issues() ?? [] as issue}
 			<span class="pt-2 text-sm text-red-500">{issue.message}</span>
 		{/each}
+		<p class="text-sm text-neutral-400">
+			Generally, up to 30% of the time spent on a project can be completed
+			with generative AI assistance. Projects with more than 30% of their
+			time attributed to AI code generation may have their rewarded hours
+			manually adjusted.
+		</p>
 	</label>
 
 	<label>
