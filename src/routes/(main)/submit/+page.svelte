@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Head from "#lib/components/Head.svelte";
+import Head from "#lib/components/Head.svelte"
 import { getTimelapses, newProjectForm } from "./submit.remote"
 
 const timelapseData = $derived(await getTimelapses())
