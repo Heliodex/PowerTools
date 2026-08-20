@@ -227,11 +227,11 @@ export async function findOrCreateUser(
 		yswsEligible: ysws_eligible ?? false,
 		// address: address
 		// 	? {
-		// 			streetAddress: address.street_address ?? null,
-		// 			locality: address.locality ?? null,
-		// 			region: address.region ?? null,
-		// 			postalCode: address.postal_code ?? null,
-		// 			country: address.country ?? null,
+		// 			streetAddress: address.street_address || null,
+		// 			locality: address.locality || null,
+		// 			region: address.region || null,
+		// 			postalCode: address.postal_code || null,
+		// 			country: address.country || null,
 		// 		}
 		// 	: null,
 	}

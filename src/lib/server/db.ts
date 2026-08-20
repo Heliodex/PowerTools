@@ -77,12 +77,14 @@ export async function reconnect() {
 }
 
 type RecordIdTypes = {
+	createdProject: string
 	hasSession: string
 	project: string
 	session: string
 	user: string
 }
 
+export const CreatedProject = new Table("createdProject")
 export const HasSession = new Table("hasSession")
 export const Project = new Table("project")
 export const Session = new Table("session")
@@ -101,20 +103,3 @@ export const Record = <T extends keyof RecordIdTypes>(
 	table: T,
 	id: RecordIdTypes[T]
 ) => new SurrealRecordId(table, id)
-
-/**
- * Finds whether a record exists in the database.
- * @param id The id of the record to find.
- * @returns Whether the record exists.
- * @example
- * await find("user", id)
- */
-export async function find<T extends keyof RecordIdTypes>(
-	table: T,
-	id: RecordIdTypes[T]
-) {
-	const [result] = await db.query<boolean[]>("!!SELECT 1 FROM $thing", {
-		thing: Record(table, id),
-	})
-	return result
-}
