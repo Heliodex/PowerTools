@@ -8,8 +8,7 @@ const sinceLabel = $derived(
 	timelapseData ? new Date(timelapseData.since).toLocaleDateString() : ""
 )
 
-// Kept in sync with the checkboxes via bind:group; also drives the count below
-let selected = $derived(newProjectForm.fields.timelapseIds)
+let selected = $derived(newProjectForm.fields.timelapseIds.value() ?? [])
 
 function formatDuration(seconds: number) {
 	const hours = Math.floor(seconds / 3600)
