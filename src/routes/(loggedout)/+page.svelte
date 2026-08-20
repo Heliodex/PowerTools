@@ -100,12 +100,12 @@ import logo from "#lib/assets/powertools.svg"
 			</AccordionItem>
 
 			<AccordionItem title="How much does it cost to join in?">
-				{name} is completely free to join and participate in. All prizes
+				{programmeName} is completely free to join and participate in. All prizes
 				are provided by us.
 			</AccordionItem>
 
 			<AccordionItem title="Who runs this?">
-				{name} is sponsored by
+				{programmeName} is sponsored by
 				<a
 					href="https://hackclub.com"
 					target="_blank"
