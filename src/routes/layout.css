@@ -136,7 +136,6 @@ button[disabled] {
 	@apply opacity-50 pointer-events-none;
 }
 
-
 :not(nav) ul {
 	list-style-type: disc;
 	padding-left: 1.5rem;

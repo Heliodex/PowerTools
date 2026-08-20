@@ -6,7 +6,6 @@ import pc from "picocolors"
 import {
 	cookieName,
 	cookieOptions,
-	startHackClubAuth,
 	validateSessionToken,
 } from "#lib/server/auth.js"
 import { reconnect } from "#lib/server/db.js"

@@ -49,6 +49,12 @@
 			"arrowParentheses": "asNeeded"
 		}
 	},
+	"html": {
+		"experimentalFullSupportEnabled": true,
+		"formatter": {
+			"enabled": true
+		}
+	},
 	"overrides": [
 		{
 			"includes": [".svelte-kit/**", "build/**"],
@@ -61,22 +67,14 @@
 			"linter": {
 				"rules": {
 					"style": {
-						"useConst": "off"
+						"useConst": "off",
+						"useImportType": "off"
 					},
 					"correctness": {
-						"noUnusedLabels": "off",
-						"noUnusedImports": "off",
-						"noUnusedVariables": "off"
-					},
-					"suspicious": {
-						"noConfusingLabels": "off",
-						"noEvolvingTypes": "off",
-						"noImplicitAnyLet": "off"
+						"noUnusedVariables": "off",
+						"noUnusedImports": "off"
 					}
 				}
-			},
-			"formatter": {
-				"enabled": false
 			}
 		}
 	]
