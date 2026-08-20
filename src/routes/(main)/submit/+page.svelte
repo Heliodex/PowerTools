@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Head from "#lib/components/Head.svelte";
 import { getTimelapses, newProjectForm } from "./submit.remote"
 
 const timelapseData = $derived(await getTimelapses())
@@ -8,7 +9,7 @@ const sinceLabel = $derived(
 )
 
 // Kept in sync with the checkboxes via bind:group; also drives the count below
-let selected = $state<string[]>([])
+let selected = $derived(newProjectForm.fields.timelapseIds)
 
 function formatDuration(seconds: number) {
 	const hours = Math.floor(seconds / 3600)
@@ -20,6 +21,8 @@ function formatDuration(seconds: number) {
 		.join(":")
 }
 </script>
+
+<Head title="Submit your project" />
 
 <h1 class="text-2xl">Submit your project</h1>
 
@@ -59,7 +62,7 @@ function formatDuration(seconds: number) {
 								Processing…
 							</div>
 						{/if}
-						<span class="mt-2 line-clamp-1 text-sm font-semibold"
+						<span class="pt-2 line-clamp-1 text-sm font-semibold"
 							>{t.name}</span
 						>
 						<span class="text-xs opacity-70">
@@ -271,7 +274,7 @@ function formatDuration(seconds: number) {
 	</label>
 
 	{#if newProjectForm.fields.allIssues()?.length}
-		<div class="mb-6" role="alert">
+		<div class="pb-6" role="alert">
 			<p class="font-bold text-red-500">
 				Please fix the following issues:
 			</p>

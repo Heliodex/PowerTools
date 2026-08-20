@@ -1,6 +1,9 @@
 <script lang="ts">
 import Code from "#components/Code.svelte"
+import Head from "#lib/components/Head.svelte"
 </script>
+
+<Head title="Guide" />
 
 <a href="/">Back to the homepage</a>
 
@@ -197,13 +200,14 @@ import Code from "#components/Code.svelte"
 	browser yet though, since they aren't part of the Document Object Model, or
 	the DOM. The <code>addChildren</code> functions here are used to add the
 	elements as parents of each other, and then finally we use
-	<code>document.body.appendChild()</code> to add the parent element to the
-	DOM.
+	<code>document.body.appendChild()</code>
+	to add the parent element to the DOM.
 </p>
 
 <p>
 	We could do this final part of parenting elements to the DOM with our
-	<code>addChildren()</code> function as well:
+	<code>addChildren()</code>
+	function as well:
 </p>
 
 <Code
@@ -489,8 +493,8 @@ import Code from "#components/Code.svelte"
 
 <p>
 	Now we'll add a class for the virtual DOM as a whole in a separate file,
-	<b>dom.js</b> This will hold the elements for the head and the body of the
-	document.
+	<b>dom.js</b>
+	This will hold the elements for the head and the body of the document.
 </p>
 
 <Code
@@ -551,8 +555,8 @@ import Code from "#components/Code.svelte"
 
 <p>
 	For good measure, we'll add some shorter aliases for the
-	<code>new TextNode()</code> and <code>new TagElement()</code> constructor
-	functions.
+	<code>new TextNode()</code>
+	and <code>new TagElement()</code> constructor functions.
 </p>
 
 <Code
@@ -658,9 +662,10 @@ import Code from "#components/Code.svelte"
 	Updating the DOM here from an event still requires updating the content of
 	the element manually. How about trying to integrate a reactivity system into
 	the above virtual DOM implementation? See if you can modify the
-	<b>dom.js</b> and <b>element.js</b> files, and implement <b>value.js</b>, to
-	allow the following code snippet, or something similar to it, to increment
-	both counters automatically.
+	<b>dom.js</b>
+	and <b>element.js</b> files, and implement <b>value.js</b>, to allow the
+	following code snippet, or something similar to it, to increment both
+	counters automatically.
 	<br>
 	For bonus credit, make sure that there are no more updates made than are
 	absolutely necessary, that is, only 1 update for each VDOM element/computed

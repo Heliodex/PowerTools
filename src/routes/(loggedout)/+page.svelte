@@ -1,9 +1,12 @@
 <script lang="ts">
 import Accordion from "#components/Accordion.svelte"
 import AccordionItem from "#components/AccordionItem.svelte"
+import Head from "#components/Head.svelte"
 import { programmeName } from "#lib/assets/config.js"
 import logo from "#lib/assets/powertools.svg"
 </script>
+
+<Head />
 
 <a href="https://hackclub.com/" target="_blank" rel="noreferrer">
 	<img
@@ -100,12 +103,14 @@ import logo from "#lib/assets/powertools.svg"
 			</AccordionItem>
 
 			<AccordionItem title="How much does it cost to join in?">
-				{programmeName} is completely free to join and participate in. All prizes
-				are provided by us.
+				{programmeName}
+				is completely free to join and participate in. All prizes are
+				provided by us.
 			</AccordionItem>
 
 			<AccordionItem title="Who runs this?">
-				{programmeName} is sponsored by
+				{programmeName}
+				is sponsored by
 				<a
 					href="https://hackclub.com"
 					target="_blank"

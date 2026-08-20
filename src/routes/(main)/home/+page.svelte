@@ -1,8 +1,11 @@
 <script lang="ts">
+    import Head from "#lib/components/Head.svelte";
 import { getLapseData, lapseLogin, logout } from "../api.remote"
 
 const lapseData = $derived(await getLapseData())
 </script>
+
+<Head title="Home" />
 
 <h1>You are logged in</h1>
 

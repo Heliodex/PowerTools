@@ -1,8 +1,11 @@
 <script lang="ts">
+import Head from "#lib/components/Head.svelte"
 import { getProjects } from "./admin.remote"
 
 let projects = $derived(await getProjects())
 </script>
+
+<Head title="Admin" />
 
 <h1>All submitted projects</h1>
 

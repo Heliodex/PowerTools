@@ -1,3 +1,9 @@
+<script>
+import Head from "#lib/components/Head.svelte"
+</script>
+
+<Head title="Submission received!" />
+
 <div class="flex flex-col items-center pt-16 text-center">
 	<div
 		class="flex size-16 items-center justify-center rounded-full bg-green-500/20"
