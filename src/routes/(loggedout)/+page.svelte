@@ -30,24 +30,9 @@ import logo from "#lib/assets/powertools.svg"
 			>@Heliodex</a
 		>
 	</p>
-	<p class="max-w-120 pb-4">
-		Refurbish your frontend experience by building a mini JS framework or
-		tool, and win cloud credits to host it!
-	</p>
 	<p class="max-w-120">
-		Spend 1 hour building your tool and win a $5 grant card spendable at
-		various vendors.
-		<br>
-		<b
-			>Track your time spent with
-			<a
-				href="https://lapse.hackclub.com/"
-				target="_blank"
-				rel="noreferrer"
-				>Lapse</a
-			>
-			so we can verify it!</b
-		>
+		Spend 1 hour building a mini JS framework or tool,<br>
+		win $5 in cloud credits to host a demo
 	</p>
 </div>
 
@@ -78,9 +63,21 @@ import logo from "#lib/assets/powertools.svg"
 	<li>A reactivity system to automatically update your HTML from data</li>
 </ul>
 
-<p>
+<p class="pb-4">
 	See the <a href="/guide">Guide</a>, showing how to build an example project,
-	more inspiration!
+	for more inspiration.
+</p>
+
+<p>
+	Refurbish your frontend experience and win a grant card spendable at various
+	vendors.
+	<b
+		>Track your time spent with
+		<a href="https://lapse.hackclub.com/" target="_blank" rel="noreferrer"
+			>Lapse</a
+		>
+		so we can verify it!</b
+	>!
 </p>
 
 <div id="faq">
