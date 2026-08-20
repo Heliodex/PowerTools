@@ -1,5 +1,6 @@
 <script lang="ts">
 	import "./layout.css"
+    import { repoName } from "#lib/assets/config.js"
 	import favicon from "#lib/assets/powertools.svg"
 	import { getIsAdmin, getLoggedIn, login } from "./data.remote"
 
@@ -54,7 +55,7 @@
 
 	<p>
 		<a href="https://hackclub.com/privacy-and-terms" target="_blank" rel="noreferrer">Privacy & Terms</a> |
-		<a href="https://github.com/Heliodex/ysws2" target="_blank" rel="noreferrer">Source code</a>
+		<a href="https://github.com/{repoName}" target="_blank" rel="noreferrer">Source code</a>
 	</p>
 </footer>
 

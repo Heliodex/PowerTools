@@ -1,9 +1,8 @@
 <script lang="ts">
 	import Accordion from "#components/Accordion.svelte"
 	import AccordionItem from "#components/AccordionItem.svelte"
-	import powertools from "#lib/assets/powertools.svg"
-
-	const name = "Power Tools"
+    import { programmeName } from "#lib/assets/config.js"
+	import logo from "#lib/assets/powertools.svg"
 </script>
 
 <a href="https://hackclub.com/" target="_blank" rel="noreferrer">
@@ -15,9 +14,9 @@
 </a>
 
 <div class="text-center pb-8 flex flex-col items-center">
-	<img src={powertools} alt="Power Tools logo" class="w-72" />
+	<img src={logo} alt="{programmeName} logo" class="w-72" />
 
-	<h1 class="text-6xl! pb-0!">Power Tools</h1>
+	<h1 class="text-6xl! pb-0!">{programmeName}</h1>
 	<p class="text-center pb-8">
 		by <a href="https://hackclub.enterprise.slack.com/team/U07JH9LU1NC" target="_blank" rel="noreferrer">@Heliodex</a>
 	</p>
